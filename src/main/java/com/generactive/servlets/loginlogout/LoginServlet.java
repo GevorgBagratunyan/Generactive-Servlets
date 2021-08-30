@@ -1,5 +1,6 @@
 package com.generactive.servlets.loginlogout;
 
+import com.generactive.model.enums.Role;
 import com.generactive.storage.UserRepository;
 
 import javax.servlet.annotation.WebServlet;
@@ -11,20 +12,25 @@ import java.io.IOException;
 
 @WebServlet(name = "LoginServlet", value = "/login")
 public class LoginServlet extends HttpServlet {
+
+    private final UserRepository repository = new UserRepository();
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        UserRepository repository = new UserRepository();
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
         if (repository.userIsExist(username, password)) {
             HttpSession session = req.getSession();
-            session.setAttribute("isLoggedIn", username);
+            Role role = repository.getUserByLoginAndPassword(username,password).get().getRole();
+            session.setAttribute("isLoggedIn", true);
             session.setAttribute("username", username);
             session.setAttribute("password", password);
+            session.setAttribute("role", role);
+            res.getWriter().write("Login SUCCESS!");
             res.sendRedirect("/hello-servlet");
         } else {
-            res.sendRedirect("/login");
+            res.sendError(HttpServletResponse.SC_NOT_FOUND, "wrong username/password");
         }
     }
 }

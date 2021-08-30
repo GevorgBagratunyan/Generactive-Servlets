@@ -7,20 +7,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
+//Authorization
 @WebFilter(filterName = "authFilter", value = "/*")
-public class AuthFilter extends HttpFilter {
+public class LoginFilter extends HttpFilter {
 
     @Override
     public void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
 
         boolean isLoggedIn = req.getSession().getAttribute("isLoggedIn") != null;
+        String logInURI = req.getContextPath() + "/login";
+        String currentReq = req.getRequestURI();
+        boolean loginRequest = currentReq.equals(logInURI);
 
         //For logged users checking if they have cookie attributes for authentication
-        if (isLoggedIn) {
+        if (isLoggedIn || loginRequest ) {
             chain.doFilter(req, res);
         } else {
-            res.sendRedirect("/login");
+            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Access is denied");
         }
     }
 }
