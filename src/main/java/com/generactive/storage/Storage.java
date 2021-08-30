@@ -48,9 +48,13 @@ public class Storage {
     }
 
     public static Optional<Item> removeItemById(int id) {
-        return ITEMS.values().stream()
-                .filter(item -> item.getId()==id)
+        Optional<Item> item =  ITEMS.values().stream()
+                .filter(i -> i.getId()==id)
                 .findFirst();
+        if(item.isPresent()){
+            ITEMS.remove(id);
+        }
+        return item;
     }
 
     public static List<Item> findHighestPricedItems() {
