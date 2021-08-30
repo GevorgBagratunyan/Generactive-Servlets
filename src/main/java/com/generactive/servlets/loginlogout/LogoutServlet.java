@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LogoutServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+        req.getSession().removeAttribute("isLoggedIn");
         req.getSession().invalidate();
     }
 }

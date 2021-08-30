@@ -19,6 +19,7 @@ public class LoginServlet extends HttpServlet {
 
         if (repository.userIsExist(username, password)) {
             HttpSession session = req.getSession();
+            session.setAttribute("isLoggedIn", username);
             session.setAttribute("username", username);
             session.setAttribute("password", password);
             res.sendRedirect("/hello-servlet");
