@@ -28,7 +28,6 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("password", password);
             session.setAttribute("role", role);
             res.getWriter().write("Login SUCCESS!");
-            res.sendRedirect("/hello-servlet");
         } else {
             res.sendError(HttpServletResponse.SC_NOT_FOUND, "wrong username/password");
         }
