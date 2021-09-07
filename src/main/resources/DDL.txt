@@ -1,0 +1,49 @@
+CREATE sequence stock_item_sequence
+    start with 1
+    increment by 1;
+
+CREATE sequence gen_group_sequence
+    start with 1
+    increment by 1;
+
+CREATE sequence generative_item_sequence
+    start with 1
+    increment by 1;
+
+CREATE sequence gen_user_sequence
+    start with 1
+    increment by 1;
+
+CREATE TABLE gen_group
+(
+    id        bigint primary key default nextval('gen_group_sequence'),
+    name      varchar not null,
+    parent_id bigint
+);
+
+CREATE TABLE stock_item
+(
+    id         bigint primary key default nextval('stock_item_sequence'),
+    name       varchar not null,
+    url        varchar,
+    base_price bigint             default 0,
+    group_id   bigint references gen_group (id)
+);
+
+CREATE TABLE generative_item
+(
+    id         bigint primary key default nextval('generative_item_sequence'),
+    name       varchar not null,
+    url        varchar,
+    base_price bigint             default 0,
+    group_id   bigint references gen_group (id),
+    complexity varchar check (complexity in('ONE','TWO'))
+);
+
+CREATE TABLE gen_user
+(
+    id       bigint primary key default nextval('gen_user_sequence'),
+    username varchar not null,
+    password varchar not null,
+    role     varchar check ( role in ('ADMIN', 'USER', 'GUEST') )
+)
