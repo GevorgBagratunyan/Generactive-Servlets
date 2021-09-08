@@ -15,8 +15,8 @@ CREATE TABLE "group"
 (
     id          bigint primary key default nextval('group_sequence'),
     name        varchar not null,
-    parent_id   bigint,
-    subgroup_id bigint references "group" (id)
+    parent_id   bigint references "group"(id)
+
 );
 
 CREATE TABLE item

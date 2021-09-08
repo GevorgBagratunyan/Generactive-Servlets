@@ -23,7 +23,7 @@ public class ItemServlet extends HttpServlet {
     //Get all Items http://localhost:8080/items
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.getWriter().write(MAPPER.writeValueAsString(ITEM_REPOSITORY.all()));
+        resp.getWriter().write(MAPPER.writeValueAsString(ITEM_REPOSITORY.getAll()));
     }
 
     //DONE

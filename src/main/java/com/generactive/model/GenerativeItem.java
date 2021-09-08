@@ -2,7 +2,6 @@ package com.generactive.model;
 
 
 import com.generactive.model.enums.Complexity;
-import com.generactive.storage.Storage;
 
 import java.util.Objects;
 
@@ -16,11 +15,6 @@ public class GenerativeItem extends Item {
     public GenerativeItem(int id, String name, String url, double basePrice, int groupID, String complexity) {
         super(id, name, url, basePrice, groupID);
         this.complexity = Complexity.valueOf(complexity);
-    }
-
-    public GenerativeItem(GenerativeItemBuilder builder) {
-        super(builder.id, builder.name, builder.url, builder.price, builder.groupID);
-        complexity = builder.complexity;
     }
 
     public Complexity getComplexity() {
@@ -56,47 +50,4 @@ public class GenerativeItem extends Item {
         return Objects.hash(super.hashCode(), complexity);
     }
 
-    public static class GenerativeItemBuilder {
-        private int id;
-        private String name;
-        private String url;
-        private double price;
-        private int groupID;
-        private Complexity complexity;
-
-        public GenerativeItemBuilder id() {
-            this.id = Storage.getNextItemID();
-            return this;
-        }
-
-        public GenerativeItemBuilder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public GenerativeItemBuilder url(String url) {
-            this.url = url;
-            return this;
-        }
-
-        public GenerativeItemBuilder price(double price) {
-            this.price = price;
-            return this;
-        }
-
-        public GenerativeItemBuilder group(int groupID) {
-            this.groupID = groupID;
-            return this;
-        }
-
-
-        public GenerativeItemBuilder complexity(Complexity complexity) {
-            this.complexity = complexity;
-            return this;
-        }
-
-        public GenerativeItem build() {
-            return new GenerativeItem(this);
-        }
-    }
 }

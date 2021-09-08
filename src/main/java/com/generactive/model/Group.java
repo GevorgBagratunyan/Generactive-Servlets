@@ -1,23 +1,36 @@
 package com.generactive.model;
 
-import com.generactive.storage.Storage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Group {
-    private final int id;
-    private final String name;
-    private final Group parent;
-    private final List<Group> subGroups;
-    private final List<Item> items;
+    private int id;
+    private String name;
+    private int parentId;
+    private final List<Group> subGroups = new ArrayList<>();
+    private final List<Item> items = new ArrayList<>();
 
-    public Group(GroupBuilder builder) {
-        this.id = builder.id;
-        this.name = builder.name;
-        this.parent = builder.parent;
-        this.subGroups = builder.subGroups;
-        this.items = builder.items;
+    public Group() {
+    }
+
+    public Group(int id, String name, int parentGroupId) {
+        this.id = id;
+        this.name = name;
+        this.parentId = parentGroupId;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
     }
 
     public int getId() {
@@ -28,15 +41,15 @@ public class Group {
         return name;
     }
 
-    public Group getParent() {
-        return parent;
+    public int getParentId() {
+        return parentId;
     }
 
     public List<Group> getSubGroups() {
         return subGroups;
     }
 
-    public void addGroup(Group group) {
+    public void addSubGroup(Group group) {
         subGroups.add(group);
     }
 
@@ -72,42 +85,16 @@ public class Group {
         }
     }
 
-    public static class GroupBuilder {
-
-        private int id;
-        private String name;
-        private Group parent;
-        private final List<Group> subGroups;
-        private final List<Item> items;
-
-        public GroupBuilder() {
-            this.subGroups = new ArrayList<>();
-            this.items = new ArrayList<>();
-        }
-
-        public GroupBuilder id() {
-            this.id = Storage.getNextGroupID();
-            return this;
-        }
-
-        public GroupBuilder groupName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public GroupBuilder parentGroup(Group parent) {
-            this.parent = parent;
-            return this;
-        }
-
-        public GroupBuilder addSubgroup(Group group) {
-            this.subGroups.add(group);
-            return this;
-        }
-
-        public Group build() {
-            return new Group(this);
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Group group = (Group) o;
+        return id == group.id && parentId == group.parentId && name.equals(group.name);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, parentId);
+    }
 }

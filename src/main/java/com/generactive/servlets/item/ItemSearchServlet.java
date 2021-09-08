@@ -52,7 +52,7 @@ public class ItemSearchServlet extends HttpServlet {
                 resp.getWriter().write(MAPPER.writeValueAsString(optionalItem.get()));
             }
         } else if (pathInfo.isEmpty()) {
-            resp.getWriter().write(MAPPER.writeValueAsString(ITEM_REPOSITORY.all()));
+            resp.getWriter().write(MAPPER.writeValueAsString(ITEM_REPOSITORY.getAll()));
         } else resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request, check URL");
 
     }

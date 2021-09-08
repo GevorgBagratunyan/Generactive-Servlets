@@ -132,7 +132,7 @@ public class ItemRepository implements CRUD<Item> {
         return rows;
     }
 
-    public List<Item> all() {
+    public List<Item> getAll() {
         List<Item> list = new ArrayList<>();
         Connection connection = DbConnection.get();
         try {
