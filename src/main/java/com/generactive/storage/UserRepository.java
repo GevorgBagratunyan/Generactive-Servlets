@@ -50,13 +50,13 @@ public class UserRepository implements CRUD<User> {
     }
 
     @Override
-    public Optional<User> delete(int ID) {
+    public Integer delete(int ID) {
         Optional<User> user = USERS.stream()
                 .filter(u -> u.getId() == ID)
                 .findFirst();
         if (user.isPresent()) {
             USERS.remove(ID);
         }
-        return user;
+        return 0;
     }
 }

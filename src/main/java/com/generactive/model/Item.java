@@ -8,16 +8,16 @@ public class Item {
     private String name;
     private String url;
     private double basePrice;
-    private Group group;
+    private int groupID;
 
     public Item() {
     }
 
-    public Item(int id, String name, String url, double basePrice, Group group) {
+    public Item(int id, String name, String url, double basePrice, int groupID) {
         this.name = name;
         this.url = url;
         this.basePrice = basePrice;
-        this.group = group;
+        this.groupID = groupID;
         this.id = id;
     }
 
@@ -37,8 +37,8 @@ public class Item {
         this.basePrice = basePrice;
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
+    public void setGroupID(int groupID) {
+        this.groupID = groupID;
     }
 
     public int getId() {
@@ -57,13 +57,13 @@ public class Item {
         return basePrice;
     }
 
-    public Group getGroup() {
-        return group;
+    public int getGroupId() {
+        return groupID;
     }
 
 
     public void printContent() {
-        System.out.println("    Item group : " + this.group.getName());
+        System.out.println("    Item group id: " + this.groupID);
         System.out.println("    Item name : " + this.name);
         System.out.println("    Item price : " + this.basePrice);
         System.out.println("    Item ID : " + this.id);
@@ -83,7 +83,7 @@ public class Item {
         return id == item.id &&
                 Objects.equals(name, item.name) &&
                 Objects.equals(url, item.url) &&
-                Objects.equals(group, item.group);
+                Objects.equals(groupID, item.groupID);
     }
 
     @Override

@@ -5,8 +5,15 @@ import com.generactive.storage.Storage;
 
 public class StockItem extends Item {
 
+    public StockItem() {
+    }
+
+    public StockItem(int id, String name, String url, double basePrice, int groupID) {
+        super(id, name, url, basePrice, groupID);
+    }
+
     public StockItem(StockItemBuilder builder) {
-        super(builder.id, builder.name,builder.url, builder.price, builder.group);
+        super(builder.id, builder.name,builder.url, builder.price, builder.groupID);
     }
 
     public static class StockItemBuilder {
@@ -14,8 +21,7 @@ public class StockItem extends Item {
         private String name;
         private String url;
         private double price;
-        private Group group;
-        private Configuration configuration;
+        private int groupID;
 
         public StockItemBuilder id() {
             this.id = Storage.getNextItemID();
@@ -37,13 +43,8 @@ public class StockItem extends Item {
             return this;
         }
 
-        public StockItemBuilder group(Group group) {
-            this.group = group;
-            return this;
-        }
-
-        public StockItemBuilder configuration(Configuration configuration) {
-            this.configuration = configuration;
+        public StockItemBuilder group(int groupID) {
+            this.groupID = groupID;
             return this;
         }
 

@@ -8,11 +8,27 @@ import java.util.Objects;
 
 public class GenerativeItem extends Item {
 
-    private final Complexity complexity;
+    private Complexity complexity;
+
+    public GenerativeItem() {
+    }
+
+    public GenerativeItem(int id, String name, String url, double basePrice, int groupID, String complexity) {
+        super(id, name, url, basePrice, groupID);
+        this.complexity = Complexity.valueOf(complexity);
+    }
 
     public GenerativeItem(GenerativeItemBuilder builder) {
-        super(builder.id, builder.name, builder.url, builder.price, builder.group);
+        super(builder.id, builder.name, builder.url, builder.price, builder.groupID);
         complexity = builder.complexity;
+    }
+
+    public Complexity getComplexity() {
+        return complexity;
+    }
+
+    public void setComplexity(Complexity complexity) {
+        this.complexity = complexity;
     }
 
     @Override
@@ -45,8 +61,7 @@ public class GenerativeItem extends Item {
         private String name;
         private String url;
         private double price;
-        private Group group;
-        private Configuration configuration;
+        private int groupID;
         private Complexity complexity;
 
         public GenerativeItemBuilder id() {
@@ -69,15 +84,11 @@ public class GenerativeItem extends Item {
             return this;
         }
 
-        public GenerativeItemBuilder group(Group group) {
-            this.group = group;
+        public GenerativeItemBuilder group(int groupID) {
+            this.groupID = groupID;
             return this;
         }
 
-        public GenerativeItemBuilder configuration(Configuration configuration) {
-            this.configuration = configuration;
-            return this;
-        }
 
         public GenerativeItemBuilder complexity(Complexity complexity) {
             this.complexity = complexity;

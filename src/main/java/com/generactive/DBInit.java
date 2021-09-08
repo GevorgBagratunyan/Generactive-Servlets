@@ -30,11 +30,10 @@ public class DBInit {
         GenerativeItem gi1 = new GenerativeItem.GenerativeItemBuilder()
                 .name("Visual1 in Forest")
                 .url("https://m.media-amazon.com/images/P/B0863V2HSX.01._SCLZZZZZZZ_SX500_.jpg")
-                .group(g2)
+                .group(g2.getId())
                 .id()
                 .price(25.0)
                 .complexity(Complexity.TWO)
-                .configuration(cfg)
                 .build();
 
         g1.addGroup(g2);

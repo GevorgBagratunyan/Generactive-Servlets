@@ -9,5 +9,5 @@ public interface CRUD<T> {
 
     Optional<T> update(int ID, T t);
 
-    Optional<T> delete(int ID);
+    Integer delete(int ID);
 }

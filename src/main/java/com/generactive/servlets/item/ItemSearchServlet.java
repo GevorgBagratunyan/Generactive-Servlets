@@ -1,7 +1,6 @@
 package com.generactive.servlets.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.generactive.model.Configuration;
 import com.generactive.model.Item;
 import com.generactive.storage.ItemRepository;
 
@@ -15,22 +14,11 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @WebServlet(name = "itemSearchServlet", value = "/items/*")
-public class ItemServletWithParams extends HttpServlet {
+public class ItemSearchServlet extends HttpServlet {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final ItemRepository ITEM_REPOSITORY = new ItemRepository();
-    private static final Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
 
-    @Override
-    public void init() {
-        Item simpleItem = new Item(1, "SimpleItemInSearch", "google.com", 20.0, null) {
-            @Override
-            public double calculatePrice(Configuration configuration) {
-                return 0;
-            }
-        };
-        ITEM_REPOSITORY.create(simpleItem);
-    }
 
     //Get item if passing Numeric path http://localhost:8080/items/{id},
     //or SEARCH item when passing parametrized path http://localhost:8080/items/search?priceFrom=0&priceTo=20
@@ -39,14 +27,25 @@ public class ItemServletWithParams extends HttpServlet {
         String pathInfo = req.getPathInfo().substring(1); //Removing slash "/" from path info. ??? Is this a good idea ???
         String priceFrom = req.getParameter("priceFrom");
         String priceTo = req.getParameter("priceTo");
+        String name = req.getParameter("name");
 
         if (pathInfo.startsWith("search")) {
             if (priceFrom != null && priceTo != null) {
                 double from = Double.parseDouble(priceFrom);
                 double to = Double.parseDouble(priceTo);
                 resp.getWriter().write(MAPPER.writeValueAsString(ITEM_REPOSITORY.allByPriceRange(from, to)));
-            } else resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "No such Item(s)");
-        } else if (isNumeric(pathInfo)) {
+            } else if (name != null) {
+                Optional<Item> optionalItem = ITEM_REPOSITORY.getByName(name);
+                Item item;
+                if (optionalItem.isPresent()) {
+                    item = optionalItem.get();
+                } else {
+                    resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "No such Item");
+                    return;
+                }
+                resp.getWriter().write(MAPPER.writeValueAsString(item));
+            }
+        }  else if (isNumeric(pathInfo)) {
             int id = Integer.parseInt(pathInfo);
             Optional<Item> optionalItem = ITEM_REPOSITORY.read(id);
             if (optionalItem.isPresent()) {
@@ -62,7 +61,7 @@ public class ItemServletWithParams extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String pathInfo = req.getPathInfo();
-        if (pathInfo != null && isNumeric(pathInfo)) {
+        if (isNumeric(pathInfo)) {
             int id = Integer.parseInt(pathInfo.substring(1));
             String body = req.getReader().lines().collect(Collectors.joining());
             Item item = MAPPER.readValue(body, Item.class);
@@ -76,10 +75,10 @@ public class ItemServletWithParams extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String pathInfo = req.getPathInfo().substring(1);
-        if (pathInfo != null && isNumeric(pathInfo)) {
+        if (isNumeric(pathInfo)) {
             int id = Integer.parseInt(pathInfo);
-            Optional<Item> optionalItem = ITEM_REPOSITORY.delete(id);
-            if (!optionalItem.isPresent()) {
+            Integer rows = ITEM_REPOSITORY.delete(id);
+            if (rows == 0) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Item not found");
             } else resp.getWriter().write("Item  with ID " + pathInfo + " is removed successfully");
         } else resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request");
@@ -89,6 +88,7 @@ public class ItemServletWithParams extends HttpServlet {
         if (strNum == null) {
             return false;
         }
+        Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
         return pattern.matcher(strNum).matches();
     }
 }

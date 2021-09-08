@@ -26,8 +26,8 @@ public class GroupRepository implements CRUD<Group> {
     }
 
     @Override
-    public Optional<Group> delete(int id) {
-        return Storage.removeGroupByID(id);
+    public Integer delete(int id) {
+        return 0;
     }
 
     //In this method return is not Optional, for testing purposes
