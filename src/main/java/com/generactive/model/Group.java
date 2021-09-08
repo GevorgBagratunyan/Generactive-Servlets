@@ -45,6 +45,10 @@ public class Group {
         return parentId;
     }
 
+    public List<Item> getItems() {
+        return items;
+    }
+
     public List<Group> getSubGroups() {
         return subGroups;
     }
