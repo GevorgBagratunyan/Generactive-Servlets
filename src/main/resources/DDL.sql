@@ -46,3 +46,6 @@ CREATE TABLE "user"
     password varchar not null,
     role     varchar check ( role in ('ADMIN', 'USER', 'GUEST') )
 );
+
+SELECT * FROM item WHERE group_id = 3
+

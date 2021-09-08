@@ -3,6 +3,7 @@ package com.generactive.storage;
 
 import com.generactive.db.connection.DbConnection;
 import com.generactive.model.Group;
+import com.generactive.model.Item;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -66,6 +67,26 @@ public class GroupRepository implements CRUD<Group> {
                     }
                 }
             }
+
+
+            for (Group group : list) {
+                int id = group.getId();
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM item WHERE group_id = " + id);
+                while (rs.next()) {
+                    Item item = new Item();
+                    item.setId(rs.getInt(1));
+                    item.setName(rs.getString(2));
+                    item.setUrl(rs.getString(3));
+                    item.setBasePrice(rs.getDouble(4));
+                    item.setGroupID(rs.getInt(5));
+
+                    group.addItem(item);
+                }
+            }
+
+
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
