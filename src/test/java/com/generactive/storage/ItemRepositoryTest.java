@@ -45,7 +45,6 @@ public class ItemRepositoryTest {
         ItemRepository repository = new ItemRepository();
         repository.create(new Item(12, "Test", "URL", 22.6, 3));
         Optional<Item> item = repository.read(1);
-        System.out.println(item.get().getName());
         assertTrue(item.isPresent());
         assertEquals(1, item.get().getId());
     }
