@@ -27,6 +27,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.4'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.1.4'
+    testImplementation group: 'com.h2database', name: 'h2', version: '1.4.194'
 }
 
 test {
