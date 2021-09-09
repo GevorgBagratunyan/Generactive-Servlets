@@ -47,5 +47,4 @@ CREATE TABLE "user"
     role     varchar check ( role in ('ADMIN', 'USER', 'GUEST') )
 );
 
-SELECT * FROM item WHERE group_id = 3
 
