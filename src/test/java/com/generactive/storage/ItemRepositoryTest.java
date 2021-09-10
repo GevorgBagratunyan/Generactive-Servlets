@@ -116,7 +116,7 @@ public class ItemRepositoryTest {
         assertTrue(list.size() > 0);
         assertEquals("TestItem", list.get(0).getName());
         assertTrue(list.get(0) instanceof GenerativeItem);
-        assertTrue(list.get(0).getBasePrice()<1200.0 && list.get(0).getBasePrice()>100.0);
+        assertTrue(list.get(0).getBasePrice() < 1200.0 && list.get(0).getBasePrice() > 100.0);
     }
 
 }
