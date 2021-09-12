@@ -1,7 +1,9 @@
 package com.generactive.servlets.group;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.generactive.storage.GroupRepository;
+import com.generactive.model.Group;
+import com.generactive.repository.GroupRepository;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "groupServlet", value = "/groups")
 public class GroupServlet extends HttpServlet {
@@ -24,7 +27,13 @@ public class GroupServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+        if (!req.getContentType().equals("application/json")) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "not_supported_format");
+        }
+        String body = req.getReader().lines().collect(Collectors.joining());
+        Group group = MAPPER.readValue(body, Group.class);
+        Group saved = GROUP_REPOSITORY.create(group);
+        resp.getWriter().write(MAPPER.writeValueAsString(saved));
     }
 
     @Override

@@ -1,27 +1,36 @@
 package com.generactive.model;
 
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity(name = "groups")
 public class Group {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_seq")
+    @SequenceGenerator(name = "group_seq", sequenceName = "group_sequence", allocationSize = 1)
+    private long id;
+
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
-    private int parentId;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_group_id")
+    private Group parent;
+
+
+    @Transient
     private final List<Group> subGroups = new ArrayList<>();
+    @Transient
     private final List<Item> items = new ArrayList<>();
 
     public Group() {
     }
 
-    public Group(int id, String name, int parentGroupId) {
-        this.id = id;
-        this.name = name;
-        this.parentId = parentGroupId;
-    }
-
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -29,11 +38,11 @@ public class Group {
         this.name = name;
     }
 
-    public void setParentId(int parentId) {
-        this.parentId = parentId;
+    public void setParent(Group parent) {
+        this.parent = parent;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -41,16 +50,8 @@ public class Group {
         return name;
     }
 
-    public int getParentId() {
-        return parentId;
-    }
-
-    public List<Item> getItems() {
-        return items;
-    }
-
-    public List<Group> getSubGroups() {
-        return subGroups;
+    public Group getParent() {
+        return parent;
     }
 
     public void addSubGroup(Group group) {
@@ -90,15 +91,23 @@ public class Group {
     }
 
     @Override
+    public String toString() {
+        return "Group{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Group group = (Group) o;
-        return id == group.id && parentId == group.parentId && name.equals(group.name);
+        return id == group.id && Objects.equals(name, group.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, parentId);
+        return Objects.hash(id, name);
     }
 }

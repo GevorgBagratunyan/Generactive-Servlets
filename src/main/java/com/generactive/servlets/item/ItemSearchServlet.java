@@ -1,8 +1,10 @@
 package com.generactive.servlets.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.generactive.model.GenerativeItem;
 import com.generactive.model.Item;
-import com.generactive.storage.ItemRepository;
+import com.generactive.model.StockItem;
+import com.generactive.repository.ItemRepository;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -60,13 +62,20 @@ public class ItemSearchServlet extends HttpServlet {
     //Update item with given JSON protocol fields http://localhost:8080/items/{id}
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String pathInfo = req.getPathInfo();
+        String pathInfo = req.getPathInfo().substring(1);
         if (isNumeric(pathInfo)) {
-            int id = Integer.parseInt(pathInfo.substring(1));
+            int id = Integer.parseInt(pathInfo);
             String body = req.getReader().lines().collect(Collectors.joining());
-            Item item = MAPPER.readValue(body, Item.class);
-            ITEM_REPOSITORY.update(id, item);
-            resp.getWriter().write(MAPPER.writeValueAsString(item));
+
+            if (body.contains("complexity")) {
+                GenerativeItem item = MAPPER.readValue(body, GenerativeItem.class);
+                GenerativeItem updated = (GenerativeItem) ITEM_REPOSITORY.update(item).get();
+                resp.getWriter().write(MAPPER.writeValueAsString(updated));
+            } else {
+                StockItem item = MAPPER.readValue(body, StockItem.class);
+                StockItem updated = (StockItem) ITEM_REPOSITORY.update(item).get();
+                resp.getWriter().write(MAPPER.writeValueAsString(updated));
+            }
         } else resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request");
 
     }
@@ -76,11 +85,12 @@ public class ItemSearchServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String pathInfo = req.getPathInfo().substring(1);
         if (isNumeric(pathInfo)) {
-            int id = Integer.parseInt(pathInfo);
-            Integer rows = ITEM_REPOSITORY.delete(id);
-            if (rows == 0) {
+            Long id = Long.parseLong(pathInfo);
+            Optional<Item> optionalItem = ITEM_REPOSITORY.delete(id);
+            if (!optionalItem.isPresent()) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Item not found");
-            } else resp.getWriter().write("Item  with ID " + pathInfo + " is removed successfully");
+            } else resp.getWriter().write("Item  with ID " + pathInfo + " is removed successfully\n"
+                    + MAPPER.writeValueAsString(optionalItem.get()));
         } else resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request");
     }
 

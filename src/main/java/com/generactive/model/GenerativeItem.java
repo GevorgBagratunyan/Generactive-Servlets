@@ -3,18 +3,24 @@ package com.generactive.model;
 
 import com.generactive.model.enums.Complexity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.Objects;
 
+@Entity(name = "generative_item")
 public class GenerativeItem extends Item {
 
+    @Column(name = "complexity")
+    @Enumerated(EnumType.STRING)
     private Complexity complexity;
 
     public GenerativeItem() {
     }
 
-    public GenerativeItem(int id, String name, String url, double basePrice, int groupID, String complexity) {
-        super(id, name, url, basePrice, groupID);
-        this.complexity = Complexity.valueOf(complexity);
+    public GenerativeItem(Complexity complexity) {
+        this.complexity = complexity;
     }
 
     public Complexity getComplexity() {
@@ -34,20 +40,24 @@ public class GenerativeItem extends Item {
     }
 
     @Override
+    public String toString() {
+        return "Generative Item : " + super.toString().substring(5);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GenerativeItem that = (GenerativeItem) o;
-        if (!super.equals(o)) {
-            return false;
-        } else {
-            return complexity == that.complexity;
-        }
+        GenerativeItem item = (GenerativeItem) o;
+        return this.getId() == item.getId() &&
+                Double.compare(item.getBasePrice(), this.getBasePrice()) == 0 &&
+                Objects.equals(this.getName(), item.getName()) &&
+                Objects.equals(this.getUrl(), item.getUrl()) &&
+                Objects.equals(this.getGroup().getName(), item.getGroup().getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), complexity);
+        return super.hashCode() + Objects.hash(complexity);
     }
-
 }

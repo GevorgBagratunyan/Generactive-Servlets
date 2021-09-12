@@ -3,7 +3,7 @@ package com.generactive.servlets.item;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.generactive.model.GenerativeItem;
 import com.generactive.model.StockItem;
-import com.generactive.storage.ItemRepository;
+import com.generactive.repository.ItemRepository;
 
 
 import javax.servlet.annotation.WebServlet;

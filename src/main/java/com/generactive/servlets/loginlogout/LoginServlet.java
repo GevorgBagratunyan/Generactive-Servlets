@@ -1,7 +1,7 @@
 package com.generactive.servlets.loginlogout;
 
 import com.generactive.model.enums.Role;
-import com.generactive.storage.UserRepository;
+import com.generactive.repository.UserRepository;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
