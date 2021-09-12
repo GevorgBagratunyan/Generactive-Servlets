@@ -1,9 +1,10 @@
-package com.generactive.servlets.item;
+package com.generactive.servlets.group;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.generactive.model.Item;
-import com.generactive.repository.ItemRepository;
+import com.generactive.model.Group;
+import com.generactive.repository.GroupRepository;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,28 +13,27 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-@WebServlet(name = "itemGroupInitializer", value = "/items/group")
-public class ItemGroupInitializerServlet extends HttpServlet {
+@WebServlet(name = "groupParentInitializer", value = "/groups/parent")
+public class GroupParentInitializerServlet extends HttpServlet {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final ItemRepository ITEM_REPOSITORY = new ItemRepository();
+    private static final GroupRepository GROUP_REPOSITORY = new GroupRepository();
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String itemId = req.getParameter("itemId");
         String groupId = req.getParameter("groupId");
-        long itId = -1;
+        String parentId = req.getParameter("parentId");
         long grId = -1;
+        long parId = -1;
 
-       Item item;
-        if(isNumeric(itemId) && isNumeric(groupId)) {
-            itId = Long.parseLong(itemId);
+        if(isNumeric(groupId) && isNumeric(parentId)) {
             grId = Long.parseLong(groupId);
-            Optional<Item> optionalItem = ITEM_REPOSITORY.setGroup(itId,grId);
-            if(optionalItem.isPresent()) {
-                item = optionalItem.get();
-                resp.getWriter().write(MAPPER.writeValueAsString(item));
-            } else resp.sendError(HttpServletResponse.SC_NOT_FOUND, "item not found");
+            parId = Long.parseLong(parentId);
+            Optional<Group> optionalGroup = GROUP_REPOSITORY.setParent(grId,parId);
+            if(optionalGroup.isPresent()) {
+                Group group = optionalGroup.get();
+                resp.getWriter().write(MAPPER.writeValueAsString(group));
+            } else resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Group not found");
         } else resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "incorrect parameters");
     }
 

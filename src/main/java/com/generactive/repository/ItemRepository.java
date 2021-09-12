@@ -33,9 +33,9 @@ public class ItemRepository implements CRUD<Item> {
     public Optional<Item> update(Item item) {
         Session session = GeneractiveSessionFactory.getSession();
         session.beginTransaction();
-        Item saved = (Item) session.merge(item);
+        Item updated = (Item) session.merge(item);
         session.getTransaction().commit();
-        return Optional.ofNullable(saved);
+        return Optional.ofNullable(updated);
     }
 
 
@@ -48,7 +48,7 @@ public class ItemRepository implements CRUD<Item> {
         if (item != null) {
             session.delete(item);
             optionalItem = Optional.of(item);
-        } else optionalItem = Optional.ofNullable(item);
+        } else optionalItem = Optional.empty();
         session.getTransaction().commit();
         return optionalItem;
     }
@@ -59,9 +59,9 @@ public class ItemRepository implements CRUD<Item> {
         Group group = session.get(Group.class, groupID);
         Item item = session.get(Item.class, itemID);
         item.setGroup(group);
-        session.update(item);
+        Item updated = (Item) session.merge(item);
         session.getTransaction().commit();
-        return Optional.ofNullable(item);
+        return Optional.ofNullable(updated);
     }
 
     public List<Item> getAll() {

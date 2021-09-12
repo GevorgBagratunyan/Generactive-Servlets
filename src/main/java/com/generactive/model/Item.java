@@ -23,7 +23,7 @@ public class Item {
     @Column(name = "base_price")
     private double basePrice = 0.0;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
 

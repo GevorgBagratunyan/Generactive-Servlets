@@ -20,13 +20,13 @@ public class GroupServlet extends HttpServlet {
     private static final GroupRepository GROUP_REPOSITORY = new GroupRepository();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.getWriter().write(MAPPER.writeValueAsString(GROUP_REPOSITORY.getAll()));
 
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (!req.getContentType().equals("application/json")) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "not_supported_format");
         }

@@ -21,20 +21,52 @@ public class GroupRepository implements CRUD<Group> {
 
     @Override
     public Optional<Group> read(long ID) {
-        return Optional.empty();
+        Session session = GeneractiveSessionFactory.getSession();
+        session.beginTransaction();
+        Group group = session.get(Group.class, ID);
+        session.getTransaction().commit();
+        return Optional.ofNullable(group);
     }
 
     @Override
     public Optional<Group> update(Group group) {
-        return Optional.empty();
+        Session session = GeneractiveSessionFactory.getSession();
+        session.beginTransaction();
+        Group updated = (Group) session.merge(group);
+        session.getTransaction().commit();
+        return Optional.ofNullable(updated);
     }
 
     @Override
     public Optional<Group> delete(long ID) {
-        return null;
+        Optional<Group> optionalGroup;
+        Session session = GeneractiveSessionFactory.getSession();
+        session.beginTransaction();
+        Group group = session.get(Group.class, ID);
+        if (group != null) {
+            session.delete(group);
+            optionalGroup = Optional.of(group);
+        } else optionalGroup = Optional.empty();
+        session.getTransaction().commit();
+        return optionalGroup;
     }
 
     public List<Group> getAll() {
-        return null;
+        Session session = GeneractiveSessionFactory.getSession();
+        session.beginTransaction();
+        List<Group> groups = session.createQuery("FROM groups ", Group.class).list();
+        session.getTransaction().commit();
+        return groups;
+    }
+
+    public Optional<Group> setParent(long groupID, long parentID) {
+        Session session = GeneractiveSessionFactory.getSession();
+        session.beginTransaction();
+        Group group = session.get(Group.class, groupID);
+        Group parent = session.get(Group.class, parentID);
+        group.setParent(parent);
+        Group updated = (Group) session.merge(group);
+        session.getTransaction().commit();
+        return Optional.ofNullable(updated);
     }
 }

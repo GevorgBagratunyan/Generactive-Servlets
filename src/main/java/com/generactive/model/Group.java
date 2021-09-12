@@ -17,14 +17,15 @@ public class Group {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "parent_group_id")
     private Group parent;
 
 
-    @Transient
+    @OneToMany
     private final List<Group> subGroups = new ArrayList<>();
-    @Transient
+
+    @OneToMany
     private final List<Item> items = new ArrayList<>();
 
     public Group() {
