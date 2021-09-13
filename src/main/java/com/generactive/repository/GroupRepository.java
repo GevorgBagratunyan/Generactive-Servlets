@@ -3,6 +3,7 @@ package com.generactive.repository;
 import com.generactive.model.Group;
 import com.generactive.util.GeneractiveSessionFactory;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +58,16 @@ public class GroupRepository implements CRUD<Group> {
         List<Group> groups = session.createQuery("FROM groups ", Group.class).list();
         session.getTransaction().commit();
         return groups;
+    }
+
+    public Optional<Group> getByName(String name) {
+        Session session = GeneractiveSessionFactory.getSession();
+        session.beginTransaction();
+        Query<Group> query = session.createQuery("FROM groups g WHERE g.name=:name", Group.class);
+        query.setParameter("name", name);
+        Group group = query.uniqueResult();
+        session.getTransaction().commit();
+        return Optional.ofNullable(group);
     }
 
     public Optional<Group> setParent(long groupID, long parentID) {

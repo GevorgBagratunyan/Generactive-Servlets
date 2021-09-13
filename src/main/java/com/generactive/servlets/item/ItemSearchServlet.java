@@ -26,7 +26,7 @@ public class ItemSearchServlet extends HttpServlet {
     //or SEARCH item when passing parametrized path http://localhost:8080/items/search?priceFrom=0&priceTo=20
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String pathInfo = req.getPathInfo().substring(1); //Removing slash "/" from path info. ??? Is this a good idea ???
+        String pathInfo = req.getPathInfo().substring(1); //Removing slash "/" from path info.
         String priceFrom = req.getParameter("priceFrom");
         String priceTo = req.getParameter("priceTo");
         String name = req.getParameter("name");
@@ -48,7 +48,7 @@ public class ItemSearchServlet extends HttpServlet {
                 resp.getWriter().write(MAPPER.writeValueAsString(item));
             }
         }  else if (isNumeric(pathInfo)) {
-            int id = Integer.parseInt(pathInfo);
+            long id = Long.parseLong(pathInfo);
             Optional<Item> optionalItem = ITEM_REPOSITORY.read(id);
             if (optionalItem.isPresent()) {
                 resp.getWriter().write(MAPPER.writeValueAsString(optionalItem.get()));
@@ -85,7 +85,7 @@ public class ItemSearchServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String pathInfo = req.getPathInfo().substring(1);
         if (isNumeric(pathInfo)) {
-            Long id = Long.parseLong(pathInfo);
+            long id = Long.parseLong(pathInfo);
             Optional<Item> optionalItem = ITEM_REPOSITORY.delete(id);
             if (!optionalItem.isPresent()) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Item not found");
