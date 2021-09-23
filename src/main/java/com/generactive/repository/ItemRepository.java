@@ -5,10 +5,12 @@ import com.generactive.model.Item;
 import com.generactive.util.GeneractiveSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class ItemRepository implements CRUD<Item> {
     @Override
     public Item create(Item item) {

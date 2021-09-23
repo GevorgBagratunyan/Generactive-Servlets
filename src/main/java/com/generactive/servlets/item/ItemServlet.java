@@ -3,27 +3,28 @@ package com.generactive.servlets.item;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.generactive.model.GenerativeItem;
 import com.generactive.model.StockItem;
-import com.generactive.repository.ItemRepository;
+import com.generactive.service.ItemService;
+import com.generactive.util.ApplicationContainer;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
-@WebServlet(name = "itemServlet", value = "/items")
+@WebServlet(name = "itemServlet", urlPatterns = "/items")
 public class ItemServlet extends HttpServlet {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final ItemRepository ITEM_REPOSITORY = new ItemRepository();
+    private ObjectMapper MAPPER = new ObjectMapper();
+    private final ItemService ITEM_SERVICE = ApplicationContainer.context.getBean(ItemService.class);
 
 
     //Get all Items http://localhost:8080/items
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.getWriter().write(MAPPER.writeValueAsString(ITEM_REPOSITORY.getAll()));
+        resp.getWriter().write(MAPPER.writeValueAsString(ITEM_SERVICE.getAll()));
     }
 
     //DONE
@@ -38,11 +39,11 @@ public class ItemServlet extends HttpServlet {
         //If JSON contains complexity it means that we want to add GenerativeItem
         if (body.contains("complexity")) {
             GenerativeItem item = MAPPER.readValue(body, GenerativeItem.class);
-            GenerativeItem saved = (GenerativeItem) ITEM_REPOSITORY.create(item);
+            GenerativeItem saved = (GenerativeItem) ITEM_SERVICE.create(item);
             resp.getWriter().write(MAPPER.writeValueAsString(saved));
         } else {
             StockItem item = MAPPER.readValue(body, StockItem.class);
-            StockItem saved = (StockItem) ITEM_REPOSITORY.create(item);
+            StockItem saved = (StockItem) ITEM_SERVICE.create(item);
             resp.getWriter().write(MAPPER.writeValueAsString(saved));
         }
 

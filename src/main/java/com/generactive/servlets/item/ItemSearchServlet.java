@@ -4,23 +4,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.generactive.model.GenerativeItem;
 import com.generactive.model.Item;
 import com.generactive.model.StockItem;
-import com.generactive.repository.ItemRepository;
+import com.generactive.service.ItemService;
+import com.generactive.util.ApplicationContainer;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@WebServlet(name = "itemSearchServlet", value = "/items/*")
+@WebServlet(name = "itemSearchServlet", urlPatterns = "/items/*")
 public class ItemSearchServlet extends HttpServlet {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final ItemRepository ITEM_REPOSITORY = new ItemRepository();
-
+    private final ItemService ITEM_SERVICE = ApplicationContainer.context.getBean(ItemService.class);
 
     //Get item if passing Numeric path http://localhost:8080/items/{id},
     //or SEARCH item when passing parametrized path http://localhost:8080/items/search?priceFrom=0&priceTo=20
@@ -35,9 +35,9 @@ public class ItemSearchServlet extends HttpServlet {
             if (priceFrom != null && priceTo != null) {
                 double from = Double.parseDouble(priceFrom);
                 double to = Double.parseDouble(priceTo);
-                resp.getWriter().write(MAPPER.writeValueAsString(ITEM_REPOSITORY.allByPriceRange(from, to)));
+                resp.getWriter().write(MAPPER.writeValueAsString(ITEM_SERVICE.allByPriceRange(from, to)));
             } else if (name != null) {
-                Optional<Item> optionalItem = ITEM_REPOSITORY.getByName(name);
+                Optional<Item> optionalItem = ITEM_SERVICE.getByName(name);
                 Item item;
                 if (optionalItem.isPresent()) {
                     item = optionalItem.get();
@@ -49,12 +49,12 @@ public class ItemSearchServlet extends HttpServlet {
             }
         }  else if (isNumeric(pathInfo)) {
             long id = Long.parseLong(pathInfo);
-            Optional<Item> optionalItem = ITEM_REPOSITORY.read(id);
+            Optional<Item> optionalItem = ITEM_SERVICE.read(id);
             if (optionalItem.isPresent()) {
                 resp.getWriter().write(MAPPER.writeValueAsString(optionalItem.get()));
             }
         } else if (pathInfo.isEmpty()) {
-            resp.getWriter().write(MAPPER.writeValueAsString(ITEM_REPOSITORY.getAll()));
+            resp.getWriter().write(MAPPER.writeValueAsString(ITEM_SERVICE.getAll()));
         } else resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request, check URL");
 
     }
@@ -69,11 +69,11 @@ public class ItemSearchServlet extends HttpServlet {
 
             if (body.contains("complexity")) {
                 GenerativeItem item = MAPPER.readValue(body, GenerativeItem.class);
-                GenerativeItem updated = (GenerativeItem) ITEM_REPOSITORY.update(item).get();
+                GenerativeItem updated = (GenerativeItem) ITEM_SERVICE.update(item).get();
                 resp.getWriter().write(MAPPER.writeValueAsString(updated));
             } else {
                 StockItem item = MAPPER.readValue(body, StockItem.class);
-                StockItem updated = (StockItem) ITEM_REPOSITORY.update(item).get();
+                StockItem updated = (StockItem) ITEM_SERVICE.update(item).get();
                 resp.getWriter().write(MAPPER.writeValueAsString(updated));
             }
         } else resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request");
@@ -86,7 +86,7 @@ public class ItemSearchServlet extends HttpServlet {
         String pathInfo = req.getPathInfo().substring(1);
         if (isNumeric(pathInfo)) {
             long id = Long.parseLong(pathInfo);
-            Optional<Item> optionalItem = ITEM_REPOSITORY.delete(id);
+            Optional<Item> optionalItem = ITEM_SERVICE.delete(id);
             if (!optionalItem.isPresent()) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Item not found");
             } else resp.getWriter().write("Item  with ID " + pathInfo + " is removed successfully\n"
