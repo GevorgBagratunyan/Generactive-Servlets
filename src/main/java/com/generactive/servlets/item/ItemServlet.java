@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.generactive.model.GenerativeItem;
 import com.generactive.model.StockItem;
 import com.generactive.service.ItemService;
-import com.generactive.util.ApplicationContainer;
+import com.generactive.config.ApplicationContainer;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
 public class ItemServlet extends HttpServlet {
 
     private ObjectMapper MAPPER = new ObjectMapper();
-    private final ItemService ITEM_SERVICE = ApplicationContainer.context.getBean(ItemService.class);
+    private final ItemService itemService = ApplicationContainer.context.getBean(ItemService.class);
 
 
     //Get all Items http://localhost:8080/items
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.getWriter().write(MAPPER.writeValueAsString(ITEM_SERVICE.getAll()));
+        resp.getWriter().write(MAPPER.writeValueAsString(itemService.getAll()));
     }
 
     //DONE
@@ -39,11 +39,11 @@ public class ItemServlet extends HttpServlet {
         //If JSON contains complexity it means that we want to add GenerativeItem
         if (body.contains("complexity")) {
             GenerativeItem item = MAPPER.readValue(body, GenerativeItem.class);
-            GenerativeItem saved = (GenerativeItem) ITEM_SERVICE.create(item);
+            GenerativeItem saved = (GenerativeItem) itemService.create(item);
             resp.getWriter().write(MAPPER.writeValueAsString(saved));
         } else {
             StockItem item = MAPPER.readValue(body, StockItem.class);
-            StockItem saved = (StockItem) ITEM_SERVICE.create(item);
+            StockItem saved = (StockItem) itemService.create(item);
             resp.getWriter().write(MAPPER.writeValueAsString(saved));
         }
 

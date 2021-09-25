@@ -1,132 +1,117 @@
 package com.generactive.service;
 
-import com.generactive.model.Item;
+import com.generactive.model.Group;
 import com.generactive.repository.CRUD;
-import com.generactive.repository.ItemRepository;
+import com.generactive.repository.GroupRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
-public class ItemService implements CRUD<Item> {
+public class GroupService implements CRUD<Group> {
 
-    private final ItemRepository itemRepository;
+    private final GroupRepository groupRepository;
     private final SessionFactory sessionFactory;
 
-    public ItemService(ItemRepository itemRepository, SessionFactory sessionFactory) {
-        this.itemRepository = itemRepository;
+    public GroupService(GroupRepository groupRepository, SessionFactory sessionFactory) {
+        this.groupRepository = groupRepository;
         this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public Item create(Item item) {
+    public Group create(Group group) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.getTransaction();
         session.beginTransaction();
 
-        Item it =  itemRepository.create(item);
+        Group gr = groupRepository.create(group);
 
         transaction.commit();
         session.close();
 
-        return it;
+        return gr;
     }
 
     @Override
-    public Optional<Item> read(long ID) {
+    public Optional<Group> read(long id) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.getTransaction();
         session.beginTransaction();
 
-        Optional<Item> it =  itemRepository.read(ID);
+        Optional<Group> gr = groupRepository.read(id);
 
         transaction.commit();
         session.close();
 
-        return it;
+        return gr;
     }
 
     @Override
-    public Optional<Item> update(Item item) {
+    public Optional<Group> update(Group group) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.getTransaction();
         session.beginTransaction();
 
-        Optional<Item> it =  itemRepository.update(item);
+        Optional<Group> gr = groupRepository.update(group);
 
         transaction.commit();
         session.close();
 
-        return it;
+        return gr;
     }
 
     @Override
-    public Optional<Item> delete(long ID) {
+    public Optional<Group> delete(long id) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.getTransaction();
         session.beginTransaction();
 
-        Optional<Item> it =  itemRepository.delete(ID);
+        Optional<Group> gr = groupRepository.delete(id);
 
         transaction.commit();
         session.close();
 
-        return it;
+        return gr;
     }
 
-    public List<Item> getAll() {
+    public List<Group> getAll() {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.getTransaction();
         session.beginTransaction();
 
-        List<Item> items =  itemRepository.getAll();
+        List<Group> groups = groupRepository.getAll();
 
         transaction.commit();
         session.close();
 
-        return items;
+        return groups;
     }
 
-    public List<Item> allByPriceRange(double from, double to) {
+    public Optional<Group> getByName(String name) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.getTransaction();
         session.beginTransaction();
 
-        List<Item> items =  itemRepository.allByPriceRange(from, to);
+        Optional<Group> gr = groupRepository.getByName(name);
 
         transaction.commit();
         session.close();
 
-        return items;
+        return gr;
     }
 
-    public Optional<Item> getByName(String name) {
+    public Optional<Group> setParent(long groupId, long parentId) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.getTransaction();
         session.beginTransaction();
 
-        Optional<Item> it =  itemRepository.getByName(name);
+        Optional<Group> gr = groupRepository.setParent(groupId, parentId);
 
         transaction.commit();
         session.close();
 
-        return it;
-    }
-
-    public Optional<Item> setGroup(long itemID, long groupID) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
-
-        Optional<Item> it =  itemRepository.setGroup(itemID, groupID);
-
-        transaction.commit();
-        session.close();
-
-        return it;
+        return gr;
     }
 }

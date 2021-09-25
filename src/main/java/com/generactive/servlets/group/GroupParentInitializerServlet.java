@@ -3,21 +3,21 @@ package com.generactive.servlets.group;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.generactive.model.Group;
 import com.generactive.repository.GroupRepository;
+import com.generactive.config.ApplicationContainer;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-@WebServlet(name = "groupParentInitializer", value = "/groups/parent")
+@WebServlet(name = "groupParentInitializer", urlPatterns = "/groups/parent")
 public class GroupParentInitializerServlet extends HttpServlet {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final GroupRepository GROUP_REPOSITORY = new GroupRepository();
+    private final GroupRepository groupRepository = ApplicationContainer.context.getBean(GroupRepository.class);
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -29,7 +29,7 @@ public class GroupParentInitializerServlet extends HttpServlet {
         if(isNumeric(groupId) && isNumeric(parentId)) {
             grId = Long.parseLong(groupId);
             parId = Long.parseLong(parentId);
-            Optional<Group> optionalGroup = GROUP_REPOSITORY.setParent(grId,parId);
+            Optional<Group> optionalGroup = groupRepository.setParent(grId,parId);
             if(optionalGroup.isPresent()) {
                 Group group = optionalGroup.get();
                 resp.getWriter().write(MAPPER.writeValueAsString(group));

@@ -71,7 +71,7 @@ public class Item {
     }
 
     public void printContent() {
-        System.out.println("    Item group id: " + this.group.getId());
+        System.out.println("    Item groups id: " + this.group.getId());
         System.out.println("    Item name : " + this.name);
         System.out.println("    Item price : " + this.basePrice);
         System.out.println("    Item ID : " + this.id);
@@ -90,7 +90,7 @@ public class Item {
                 ", name='" + name + '\'' +
                 ", url='" + url + '\'' +
                 ", basePrice=" + basePrice +
-                ", group=" + group.getName() +
+                ", groups=" + group.getName() +
                 '}';
     }
 

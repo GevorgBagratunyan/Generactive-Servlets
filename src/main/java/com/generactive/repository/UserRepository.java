@@ -1,9 +1,12 @@
 package com.generactive.repository;
 
 import com.generactive.model.User;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+
+@Repository
 public class UserRepository implements CRUD<User> {
     @Override
     public User create(User user) {

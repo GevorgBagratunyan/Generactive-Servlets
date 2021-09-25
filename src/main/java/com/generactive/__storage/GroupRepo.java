@@ -17,7 +17,7 @@
 //public class GroupRepository implements CRUD<Group> {
 //
 //    @Override
-//    public Group create(Group group) {
+//    public Group create(Group groups) {
 //        return null;
 //    }
 //
@@ -28,7 +28,7 @@
 //
 //    //This will be implemented soon, after realizing REST requests
 //    @Override
-//    public Optional<Group> update(int id, Group group) {
+//    public Optional<Group> update(int id, Group groups) {
 //        return null;
 //    }
 //
@@ -42,19 +42,19 @@
 //        Connection connection = DbConnection.get();
 //        try {
 //            Statement statement = connection.createStatement();
-//            ResultSet resultSet = statement.executeQuery("SELECT * FROM \"group\" ");
+//            ResultSet resultSet = statement.executeQuery("SELECT * FROM \"groups\" ");
 //            while (resultSet.next()) {
-//                Group group = new Group();
+//                Group groups = new Group();
 //
 //                int id = resultSet.getInt(1);
 //                String name = resultSet.getString(2);
 //                int parentId = resultSet.getInt(3);
 //
-//                group.setId(id);
-//                group.setName(name);
-//                group.setParentId(parentId);
+//                groups.setId(id);
+//                groups.setName(name);
+//                groups.setParentId(parentId);
 //
-//                list.add(group);
+//                list.add(groups);
 //            }
 //
 //            //Collecting subgroups by looping on groups and checking their parent IDs
@@ -69,8 +69,8 @@
 //            }
 //
 //
-//            for (Group group : list) {
-//                int id = group.getId();
+//            for (Group groups : list) {
+//                int id = groups.getId();
 //                Statement stmt = connection.createStatement();
 //                ResultSet rs = stmt.executeQuery("SELECT * FROM item WHERE group_id = " + id);
 //                while (rs.next()) {
@@ -81,7 +81,7 @@
 //                    item.setBasePrice(rs.getDouble(4));
 //                    item.setGroupID(rs.getInt(5));
 //
-//                    group.addItem(item);
+//                    groups.addItem(item);
 //                }
 //            }
 //

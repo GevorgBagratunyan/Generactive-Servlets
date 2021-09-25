@@ -17,15 +17,16 @@ public class Group {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @OneToOne
-    @JoinColumn(name = "parent_group_id")
+    @ManyToOne(targetEntity = Group.class)
+    @JoinColumn(name = "parent_id")
     private Group parent;
 
 
     @OneToMany
+    @JoinTable(name = "group_parent")
     private final List<Group> subGroups = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "group")
     private final List<Item> items = new ArrayList<>();
 
     public Group() {
@@ -78,7 +79,7 @@ public class Group {
         if (!subGroups.isEmpty()) {
             for (Group group : subGroups) {
                 System.out.printf("  GROUP - id: {%d} Name: {%s}%n", group.getId(), group.getName());
-                System.out.println("  Items in this group : ");
+                System.out.println("  Items in this groups : ");
                 group.printItems();
             }
         } else System.out.println();

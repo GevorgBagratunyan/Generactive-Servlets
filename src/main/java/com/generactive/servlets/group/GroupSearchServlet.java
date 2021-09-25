@@ -2,21 +2,22 @@ package com.generactive.servlets.group;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.generactive.model.Group;
-import com.generactive.repository.GroupRepository;
+import com.generactive.service.GroupService;
+import com.generactive.config.ApplicationContainer;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-@WebServlet(name = "groupSearchServlet", value = "groups/search")
+@WebServlet(name = "groupSearchServlet", urlPatterns = "/groups/search")
 public class GroupSearchServlet extends HttpServlet {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final GroupRepository GROUP_REPOSITORY = new GroupRepository();
+    private final GroupService groupService = ApplicationContainer.context.getBean(GroupService.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -25,12 +26,12 @@ public class GroupSearchServlet extends HttpServlet {
 
         if(isNumeric(id)) {
             long ID = Long.parseLong(id);
-            Optional<Group> optionalGroup = GROUP_REPOSITORY.read(ID);
+            Optional<Group> optionalGroup = groupService.read(ID);
             if(optionalGroup.isPresent()) {
                 resp.getWriter().write(MAPPER.writeValueAsString(optionalGroup.get()));
             } else resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Group with ID: " + ID + " was not found");
         } else if(name!=null) {
-            Optional<Group> optionalGroup = GROUP_REPOSITORY.getByName(name);
+            Optional<Group> optionalGroup = groupService.getByName(name);
             if(optionalGroup.isPresent()) {
                 resp.getWriter().write(MAPPER.writeValueAsString(optionalGroup.get()));
             } else resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Group with name: " + name + " was not found");

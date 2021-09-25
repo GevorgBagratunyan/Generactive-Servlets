@@ -4,6 +4,7 @@ import com.generactive.model.GenerativeItem;
 import com.generactive.model.Group;
 import com.generactive.model.Item;
 import com.generactive.model.enums.Complexity;
+import com.generactive.config.ApplicationContainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,11 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ItemRepositoryTest {
 
-    private static final ItemRepository ITEM_REPOSITORY = new ItemRepository();
-    private static final GroupRepository GROUP_REPOSITORY = new GroupRepository();
+    private final static ItemRepository ITEM_REPOSITORY = ApplicationContainer.context.getBean(ItemRepository.class);
+    private final static GroupRepository GROUP_REPOSITORY = ApplicationContainer.context.getBean(GroupRepository.class);
 
     @BeforeAll
-    public static void initDatabase() {
+    static void initDatabase() {
         Group parent = new Group();
         parent.setName("Parent");
         GROUP_REPOSITORY.create(parent);

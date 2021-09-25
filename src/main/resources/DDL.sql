@@ -11,12 +11,19 @@ CREATE sequence user_sequence
     start with 1
     increment by 1;
 
-CREATE TABLE "group"
+CREATE TABLE groups
 (
     id          bigint primary key default nextval('group_sequence'),
     name        varchar not null,
-    parent_id   bigint references "group"(id)
+    parent_id   bigint references groups(id)
 
+);
+
+CREATE TABLE group_parent
+(
+    group_id bigint,
+    parent_id bigint,
+    PRIMARY KEY(group_id, parent_id)
 );
 
 CREATE TABLE item
@@ -25,7 +32,7 @@ CREATE TABLE item
     name       varchar not null,
     url        varchar,
     base_price numeric             default 0.0,
-    group_id   bigint references "group" (id)
+    group_id   bigint references groups (id)
 );
 
 CREATE TABLE stock_item
