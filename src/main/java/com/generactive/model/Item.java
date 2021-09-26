@@ -5,7 +5,8 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import java.util.Objects;
 
-@Entity(name = "item")
+@Entity()
+@Table(indexes = @Index(name = "item_multi_index", columnList = "name ASC, url"))
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Item {
 
@@ -23,7 +24,7 @@ public class Item {
     @Column(name = "base_price")
     private double basePrice = 0.0;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private Group group;
 
@@ -74,7 +75,7 @@ public class Item {
         System.out.println("    Item groups id: " + this.group.getId());
         System.out.println("    Item name : " + this.name);
         System.out.println("    Item price : " + this.basePrice);
-        System.out.println("    Item ID : " + this.id);
+        System.out.println("    Item id : " + this.id);
     }
 
     public double calculatePrice(Configuration configuration) {

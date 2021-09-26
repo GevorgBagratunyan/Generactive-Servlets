@@ -37,12 +37,12 @@ public class ItemService implements CRUD<Item> {
     }
 
     @Override
-    public Optional<Item> read(long ID) {
+    public Optional<Item> read(long id) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.getTransaction();
         session.beginTransaction();
 
-        Optional<Item> it =  itemRepository.read(ID);
+        Optional<Item> it =  itemRepository.read(id);
 
         transaction.commit();
         session.close();
@@ -65,12 +65,12 @@ public class ItemService implements CRUD<Item> {
     }
 
     @Override
-    public Optional<Item> delete(long ID) {
+    public Optional<Item> delete(long id) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.getTransaction();
         session.beginTransaction();
 
-        Optional<Item> it =  itemRepository.delete(ID);
+        Optional<Item> it =  itemRepository.delete(id);
 
         transaction.commit();
         session.close();

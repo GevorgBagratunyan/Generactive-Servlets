@@ -14,7 +14,7 @@ public class UserRepository implements CRUD<User> {
     }
 
     @Override
-    public Optional<User> read(long ID) {
+    public Optional<User> read(long id) {
         return Optional.empty();
     }
 
@@ -24,7 +24,7 @@ public class UserRepository implements CRUD<User> {
     }
 
     @Override
-    public Optional<User> delete(long ID) {
+    public Optional<User> delete(long id) {
         return null;
     }
 

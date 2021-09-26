@@ -5,9 +5,9 @@ import java.util.Optional;
 public interface CRUD<T> {
     T create(T t);
 
-    Optional<T> read(long ID);
+    Optional<T> read(long id);
 
     Optional<T> update(T t);
 
-    Optional<T> delete(long ID);
+    Optional<T> delete(long id);
 }

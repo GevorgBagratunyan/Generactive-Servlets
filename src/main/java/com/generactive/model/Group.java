@@ -65,7 +65,7 @@ public class Group {
     }
 
     public void printContent() {
-        System.out.println("Group ID : " + id + "\nName : " + name);
+        System.out.println("Group id : " + id + "\nName : " + name);
         System.out.println("Items in this Group : ");
 
         if (!items.isEmpty()) {

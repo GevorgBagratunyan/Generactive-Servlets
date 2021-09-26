@@ -89,7 +89,7 @@ public class ItemSearchServlet extends HttpServlet {
             Optional<Item> optionalItem = itemService.delete(id);
             if (!optionalItem.isPresent()) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Item not found");
-            } else resp.getWriter().write("Item  with ID " + pathInfo + " is removed successfully\n"
+            } else resp.getWriter().write("Item  with id " + pathInfo + " is removed successfully\n"
                     + MAPPER.writeValueAsString(optionalItem.get()));
         } else resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request");
     }

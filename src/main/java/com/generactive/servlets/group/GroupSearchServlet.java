@@ -25,11 +25,11 @@ public class GroupSearchServlet extends HttpServlet {
         String id = req.getParameter("id");
 
         if(isNumeric(id)) {
-            long ID = Long.parseLong(id);
-            Optional<Group> optionalGroup = groupService.read(ID);
+            long iD = Long.parseLong(id);
+            Optional<Group> optionalGroup = groupService.read(iD);
             if(optionalGroup.isPresent()) {
                 resp.getWriter().write(MAPPER.writeValueAsString(optionalGroup.get()));
-            } else resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Group with ID: " + ID + " was not found");
+            } else resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Group with id: " + iD + " was not found");
         } else if(name!=null) {
             Optional<Group> optionalGroup = groupService.getByName(name);
             if(optionalGroup.isPresent()) {

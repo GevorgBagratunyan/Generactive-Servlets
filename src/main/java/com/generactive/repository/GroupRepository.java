@@ -30,10 +30,10 @@ public class GroupRepository implements CRUD<Group> {
     }
 
     @Override
-    public Optional<Group> read(long ID) {
+    public Optional<Group> read(long id) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Group group = session.get(Group.class, ID);
+        Group group = session.get(Group.class, id);
         session.getTransaction().commit();
         return Optional.ofNullable(group);
     }

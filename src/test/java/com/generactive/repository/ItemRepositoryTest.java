@@ -52,7 +52,7 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    @DisplayName("Get Item By ID")
+    @DisplayName("Get Item By id")
     public void getById() {
         Optional<Item> optionalItem = ITEM_REPOSITORY.read(1);
         assertTrue(optionalItem.isPresent());
@@ -61,7 +61,7 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    @DisplayName("Delete Item By ID")
+    @DisplayName("Delete Item By id")
     public void deleteById() {
         Optional<Item> optionalItem = ITEM_REPOSITORY.delete(1);
         assertTrue(optionalItem.isPresent());
