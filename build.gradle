@@ -22,8 +22,8 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-//    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
-    compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '5.0.0'
+    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+//    compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '5.0.0'
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.4'
@@ -31,9 +31,14 @@ dependencies {
     testImplementation group: 'com.h2database', name: 'h2', version: '1.4.194'
     implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.5.7.Final'
 
+
     implementation group: 'org.springframework', name: 'spring-context', version: '5.3.10'
     implementation group: 'org.springframework', name: 'spring-core', version: '5.3.10'
     implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.10'
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.10'
+    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.10'
+
+
 
 }
 

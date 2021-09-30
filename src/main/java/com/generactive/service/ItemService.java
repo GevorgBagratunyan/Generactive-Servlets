@@ -1,132 +1,100 @@
 package com.generactive.service;
 
 import com.generactive.model.Item;
-import com.generactive.repository.CRUD;
 import com.generactive.repository.ItemRepository;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import com.generactive.service.crud.CRUD;
+import com.generactive.service.dto.ItemDTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Service
-public class ItemService implements CRUD<Item> {
+public class ItemService implements CRUD<ItemDTO, Long> {
 
     private final ItemRepository itemRepository;
-    private final SessionFactory sessionFactory;
 
-    public ItemService(ItemRepository itemRepository, SessionFactory sessionFactory) {
+    public ItemService(ItemRepository itemRepository) {
         this.itemRepository = itemRepository;
-        this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public Item create(Item item) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
+    public ItemDTO create(ItemDTO itemDTO) {
 
-        Item it =  itemRepository.create(item);
+        Item item = new Item();
+        BeanUtils.copyProperties(itemDTO, item);
 
-        transaction.commit();
-        session.close();
+        ItemDTO responseDTO = new ItemDTO();
+        BeanUtils.copyProperties(item, responseDTO);
 
-        return it;
+        return responseDTO;
     }
 
     @Override
-    public Optional<Item> read(long id) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
+    public ItemDTO get(Long id) {
 
-        Optional<Item> it =  itemRepository.read(id);
-
-        transaction.commit();
-        session.close();
-
-        return it;
+        Item item = itemRepository.read(id)
+                .orElseThrow(NoSuchElementException::new);
+        ItemDTO itemDTO = new ItemDTO();
+        BeanUtils.copyProperties(item, itemDTO);
+        if (item.getGroup() != null) {
+            itemDTO.setGroupName(item.getGroup().getName());
+        }
+        return itemDTO;
     }
 
     @Override
-    public Optional<Item> update(Item item) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
+    public void update(ItemDTO itemDTO) {
 
-        Optional<Item> it =  itemRepository.update(item);
-
-        transaction.commit();
-        session.close();
-
-        return it;
+        Item item = new Item();
+        BeanUtils.copyProperties(itemDTO, item);
+        itemRepository.update(item);
     }
 
     @Override
-    public Optional<Item> delete(long id) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
-
-        Optional<Item> it =  itemRepository.delete(id);
-
-        transaction.commit();
-        session.close();
-
-        return it;
+    public void delete(Long id) {
+        itemRepository.delete(id);
     }
 
-    public List<Item> getAll() {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
-
-        List<Item> items =  itemRepository.getAll();
-
-        transaction.commit();
-        session.close();
-
-        return items;
+    public List<ItemDTO> getAll() {
+        List<Item> items = itemRepository.getAll();
+        return mapToItemDTOs(items);
     }
 
-    public List<Item> allByPriceRange(double from, double to) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
 
-        List<Item> items =  itemRepository.allByPriceRange(from, to);
+    public List<ItemDTO> allByPriceRange(double from, double to) {
 
-        transaction.commit();
-        session.close();
-
-        return items;
+        List<Item> items = itemRepository.allByPriceRange(from, to);
+        return mapToItemDTOs(items);
     }
 
-    public Optional<Item> getByName(String name) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
+    public ItemDTO getByName(String name) {
 
-        Optional<Item> it =  itemRepository.getByName(name);
+        Item item = itemRepository.getByName(name);
+        ItemDTO itemDTO = new ItemDTO();
+        BeanUtils.copyProperties(item, itemDTO);
+        if (item.getGroup() != null) {
+            itemDTO.setGroupName(item.getGroup().getName());
+        }
 
-        transaction.commit();
-        session.close();
-
-        return it;
+        return itemDTO;
     }
 
-    public Optional<Item> setGroup(long itemID, long groupID) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
+    public void setGroup(Long itemID, Long groupID) {
+        itemRepository.setGroup(itemID, groupID);
+    }
 
-        Optional<Item> it =  itemRepository.setGroup(itemID, groupID);
+    private List<ItemDTO> mapToItemDTOs(List<Item> items) {
+        List<ItemDTO> itemDTOs = new ArrayList<>();
 
-        transaction.commit();
-        session.close();
+        for (Item item : items) {
+            ItemDTO itemDTO = new ItemDTO();
+            BeanUtils.copyProperties(item, itemDTO);
+            itemDTOs.add(itemDTO);
+        }
 
-        return it;
+        return itemDTOs;
     }
 }

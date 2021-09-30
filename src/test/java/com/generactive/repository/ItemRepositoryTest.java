@@ -10,9 +10,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 
 public class ItemRepositoryTest {
 
@@ -54,7 +56,7 @@ public class ItemRepositoryTest {
     @Test
     @DisplayName("Get Item By id")
     public void getById() {
-        Optional<Item> optionalItem = ITEM_REPOSITORY.read(1);
+        Optional<Item> optionalItem = ITEM_REPOSITORY.read(1L);
         assertTrue(optionalItem.isPresent());
         assertEquals(1, optionalItem.get().getId());
         assertEquals("Start_Item", optionalItem.get().getName());
@@ -63,8 +65,7 @@ public class ItemRepositoryTest {
     @Test
     @DisplayName("Delete Item By id")
     public void deleteById() {
-        Optional<Item> optionalItem = ITEM_REPOSITORY.delete(1);
-        assertTrue(optionalItem.isPresent());
+        assertDoesNotThrow(() -> ITEM_REPOSITORY.delete(1L));
     }
 
     @Test
@@ -72,11 +73,8 @@ public class ItemRepositoryTest {
     public void update() {
         Item item = new GenerativeItem(Complexity.ONE);
         item.setName("Updated");
-        Optional<Item> updatedOptionalItem = ITEM_REPOSITORY.update(item);
-        assertTrue(updatedOptionalItem.isPresent());
-        Item updatedItem = updatedOptionalItem.get();
-        assertEquals("ONE", ((GenerativeItem) updatedItem).getComplexity().toString());
-        assertEquals("Updated", updatedItem.getName());
+        assertDoesNotThrow(() ->ITEM_REPOSITORY.update(item));
+
     }
 
     @Test

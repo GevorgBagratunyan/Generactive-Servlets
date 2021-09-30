@@ -25,7 +25,6 @@
         <mapping class="com.generactive.model.GenerativeItem"/>
         <mapping class="com.generactive.model.StockItem"/>
         <mapping class="com.generactive.model.Group"/>
-        <mapping class="com.generactive.model.User"/>
 
     </session-factory>
 </hibernate-configuration>
