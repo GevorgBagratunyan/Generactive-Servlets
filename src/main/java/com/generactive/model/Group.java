@@ -17,16 +17,16 @@ public class Group {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @ManyToOne(targetEntity = Group.class)
+    @ManyToOne(targetEntity = Group.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
     private Group parent;
 
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "group_parent")
     private final List<Group> subGroups = new ArrayList<>();
 
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
     private final List<Item> items = new ArrayList<>();
 
     public Group() {
@@ -105,7 +105,7 @@ public class Group {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Group group = (Group) o;
-        return id == group.id && Objects.equals(name, group.name);
+        return Objects.equals(id, group.id) && Objects.equals(name, group.name);
     }
 
     @Override

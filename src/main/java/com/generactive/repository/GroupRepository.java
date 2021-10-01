@@ -14,10 +14,11 @@ import java.util.Optional;
 @Repository
 public class GroupRepository implements RepositoryCRUD<Group> {
 
-    EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("Generactive-JPA");
+    EntityManagerFactory entityManagerFactory;
     EntityManager entityManager;
 
     public GroupRepository() {
+        entityManagerFactory  = Persistence.createEntityManagerFactory("Generactive-JPA");
         entityManager = entityManagerFactory.createEntityManager();
     }
 

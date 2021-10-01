@@ -16,8 +16,13 @@ import java.util.Optional;
 @Repository
 public class ItemRepository implements RepositoryCRUD<Item> {
 
-    EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("Generactive-JPA");
-    EntityManager entityManager = entityManagerFactory.createEntityManager();
+    EntityManagerFactory entityManagerFactory;
+    EntityManager entityManager;
+
+    public ItemRepository() {
+        entityManagerFactory = Persistence.createEntityManagerFactory("Generactive-JPA");
+        entityManager = entityManagerFactory.createEntityManager();
+    }
 
     @Override
     public Item create(Item item) {

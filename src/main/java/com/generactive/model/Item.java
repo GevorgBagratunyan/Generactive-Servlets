@@ -24,7 +24,7 @@ public class Item {
     @Column(name = "base_price")
     private double basePrice = 0.0;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id")
     private Group group;
 
