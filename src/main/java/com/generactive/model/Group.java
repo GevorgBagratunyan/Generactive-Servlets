@@ -12,7 +12,7 @@ public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_seq")
     @SequenceGenerator(name = "group_seq", sequenceName = "group_sequence", allocationSize = 1)
-    private long id;
+    private Long id;
 
     @Column(name = "name", unique = true, nullable = false)
     private String name;
@@ -32,7 +32,7 @@ public class Group {
     public Group() {
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -44,7 +44,7 @@ public class Group {
         this.parent = parent;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

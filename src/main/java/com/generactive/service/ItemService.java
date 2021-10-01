@@ -25,11 +25,7 @@ public class ItemService implements CRUD<ItemDTO, Long> {
 
         Item item = new Item();
         BeanUtils.copyProperties(itemDTO, item);
-
-        ItemDTO responseDTO = new ItemDTO();
-        BeanUtils.copyProperties(item, responseDTO);
-
-        return responseDTO;
+        return itemDTO;
     }
 
     @Override

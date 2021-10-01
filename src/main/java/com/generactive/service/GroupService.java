@@ -1,117 +1,79 @@
 package com.generactive.service;
 
 import com.generactive.model.Group;
-import com.generactive.repository.CRUD;
 import com.generactive.repository.GroupRepository;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import com.generactive.service.crud.CRUD;
+import com.generactive.service.dto.GroupDTO;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
-public class GroupService implements CRUD<Group> {
+@Service
+public class GroupService implements CRUD<GroupDTO, Long> {
 
     private final GroupRepository groupRepository;
-    private final SessionFactory sessionFactory;
 
-    public GroupService(GroupRepository groupRepository, SessionFactory sessionFactory) {
+    public GroupService(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
-        this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public Group create(Group group) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
+    public GroupDTO create(GroupDTO groupDTO) {
 
-        Group gr = groupRepository.create(group);
-
-        transaction.commit();
-        session.close();
-
-        return gr;
+        Group group = new Group();
+        BeanUtils.copyProperties(groupDTO, group);
+        return groupDTO;
     }
 
     @Override
-    public Optional<Group> read(long id) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
+    public GroupDTO get(Long id) {
 
-        Optional<Group> gr = groupRepository.read(id);
-
-        transaction.commit();
-        session.close();
-
-        return gr;
+        Group group = groupRepository.read(id)
+                .orElseThrow(NoSuchElementException::new);
+        GroupDTO groupDTO = new GroupDTO();
+        BeanUtils.copyProperties(group, groupDTO);
+        return groupDTO;
     }
 
     @Override
-    public Optional<Group> update(Group group) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
+    public void update(GroupDTO groupDTO) {
 
-        Optional<Group> gr = groupRepository.update(group);
-
-        transaction.commit();
-        session.close();
-
-        return gr;
+        Group group = new Group();
+        BeanUtils.copyProperties(groupDTO, group);
+        groupRepository.update(group);
     }
 
     @Override
-    public Optional<Group> delete(long id) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
+    public void delete(Long id) {
 
-        Optional<Group> gr = groupRepository.delete(id);
-
-        transaction.commit();
-        session.close();
-
-        return gr;
+        groupRepository.delete(id);
     }
 
-    public List<Group> getAll() {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
+    public List<GroupDTO> getAll() {
 
         List<Group> groups = groupRepository.getAll();
-
-        transaction.commit();
-        session.close();
-
-        return groups;
+        List<GroupDTO> groupDTOs = new ArrayList<>();
+        for (Group group : groups) {
+            GroupDTO groupDTO = new GroupDTO();
+            BeanUtils.copyProperties(group, groupDTO);
+            groupDTOs.add(groupDTO);
+        }
+        return groupDTOs;
     }
 
-    public Optional<Group> getByName(String name) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
+    public GroupDTO getByName(String name) {
 
-        Optional<Group> gr = groupRepository.getByName(name);
-
-        transaction.commit();
-        session.close();
-
-        return gr;
+        Group group = groupRepository.getByName(name);
+        GroupDTO groupDTO = new GroupDTO();
+        BeanUtils.copyProperties(group, groupDTO);
+        return groupDTO;
     }
 
-    public Optional<Group> setParent(long groupId, long parentId) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.getTransaction();
-        session.beginTransaction();
+    public void setParent(Long groupId, Long parentId) {
 
-        Optional<Group> gr = groupRepository.setParent(groupId, parentId);
-
-        transaction.commit();
-        session.close();
-
-        return gr;
+        groupRepository.setParent(groupId, parentId);
     }
 }

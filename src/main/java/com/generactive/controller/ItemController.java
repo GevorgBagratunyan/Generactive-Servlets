@@ -27,7 +27,7 @@ public class ItemController {
         return itemService.getAll();
     }
 
-    @GetMapping
+    @GetMapping("/by-price")
     public List<ItemDTO> allByPriceRange(@RequestParam Double from,
                                          @RequestParam Double to) {
         return itemService.allByPriceRange(from, to);
@@ -43,14 +43,14 @@ public class ItemController {
         return itemService.create(itemDTO);
     }
 
-    @PutMapping
+    @PutMapping("/item")
     public void update(@RequestBody ItemDTO itemDTO) {
         itemService.update(itemDTO);
     }
 
-    @PutMapping("/{itemId}/{groupId}")
-    public void setGroup(@PathVariable Long itemId,
-                         @PathVariable Long groupId) {
+    @PutMapping
+    public void setGroup(@RequestParam Long itemId,
+                         @RequestParam Long groupId) {
         itemService.setGroup(itemId, groupId);
     }
 

@@ -5,6 +5,8 @@ import com.generactive.model.Item;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -14,8 +16,8 @@ import java.util.Optional;
 @Repository
 public class ItemRepository implements RepositoryCRUD<Item> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("Generactive-JPA");
+    EntityManager entityManager = entityManagerFactory.createEntityManager();
 
     @Override
     public Item create(Item item) {
@@ -50,7 +52,7 @@ public class ItemRepository implements RepositoryCRUD<Item> {
         Group group = entityManager.find(Group.class, groupId);
         Item item = entityManager.find(Item.class, itemId);
         item.setGroup(group);
-        entityManager.persist(item);
+        entityManager.merge(item);
     }
 
     public List<Item> getAll() {
@@ -64,6 +66,6 @@ public class ItemRepository implements RepositoryCRUD<Item> {
     }
 
     public Item getByName(String name) {
-        return entityManager.createQuery("SELECT i FROM item i WHERE i.name=:name", Item.class).getSingleResult();
+        return entityManager.createQuery("SELECT i FROM item i WHERE i.name='" + name + "'", Item.class).getSingleResult();
     }
 }
