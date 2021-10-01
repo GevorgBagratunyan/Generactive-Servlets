@@ -18,8 +18,8 @@ public class ItemController {
 
 
     @GetMapping("/{id}")
-    public ItemDTO get(@PathVariable Long id) {
-        return itemService.get(id);
+    public ItemDTO get(@PathVariable long id) {
+            return itemService.get(id);
     }
 
     @GetMapping
@@ -27,9 +27,29 @@ public class ItemController {
         return itemService.getAll();
     }
 
-    @GetMapping("/by-price")
-    public List<ItemDTO> allByPriceRange(@RequestParam Double from,
-                                         @RequestParam Double to) {
+    @PostMapping
+    public ItemDTO save(@RequestBody ItemDTO itemDTO) {
+        return itemService.create(itemDTO);
+    }
+
+    @PutMapping
+    public void update(@RequestBody ItemDTO item) {
+        itemService.update(item);
+    }
+
+    @DeleteMapping
+    public void delete(@PathVariable long id) {
+        itemService.delete(id);
+    }
+
+    @PutMapping("/{itemId}/{groupId}")
+    public void setGroup(@PathVariable long itemId,
+                         @PathVariable long groupId) {
+    }
+
+    @GetMapping("/{from}/{to}")
+    public List<ItemDTO> allByPriceRange(@PathVariable double from,
+                                      @PathVariable double to) {
         return itemService.allByPriceRange(from, to);
     }
 
@@ -37,27 +57,4 @@ public class ItemController {
     public ItemDTO getByName(@PathVariable String name) {
         return itemService.getByName(name);
     }
-
-    @PostMapping
-    public ItemDTO save(@RequestBody ItemDTO itemDTO) {
-        return itemService.create(itemDTO);
-    }
-
-    @PutMapping("/item")
-    public void update(@RequestBody ItemDTO itemDTO) {
-        itemService.update(itemDTO);
-    }
-
-    @PutMapping
-    public void setGroup(@RequestParam Long itemId,
-                         @RequestParam Long groupId) {
-        itemService.setGroup(itemId, groupId);
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        itemService.delete(id);
-    }
-
-
 }
