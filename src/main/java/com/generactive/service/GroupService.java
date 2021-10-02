@@ -31,7 +31,7 @@ public class GroupService implements CRUD<GroupDTO, Long> {
     @Override
     public GroupDTO get(Long id) {
 
-        Group group = groupRepository.read(id)
+        Group group = groupRepository.findById(id)
                 .orElseThrow(NoSuchElementException::new);
         GroupDTO groupDTO = new GroupDTO();
         BeanUtils.copyProperties(group, groupDTO);
@@ -43,18 +43,18 @@ public class GroupService implements CRUD<GroupDTO, Long> {
 
         Group group = new Group();
         BeanUtils.copyProperties(groupDTO, group);
-        groupRepository.update(group);
+        groupRepository.save(group);
     }
 
     @Override
     public void delete(Long id) {
 
-        groupRepository.delete(id);
+        groupRepository.deleteById(id);
     }
 
     public List<GroupDTO> getAll() {
 
-        List<Group> groups = groupRepository.getAll();
+        List<Group> groups = groupRepository.findAll();
         List<GroupDTO> groupDTOs = new ArrayList<>();
         for (Group group : groups) {
             GroupDTO groupDTO = new GroupDTO();
@@ -66,14 +66,18 @@ public class GroupService implements CRUD<GroupDTO, Long> {
 
     public GroupDTO getByName(String name) {
 
-        Group group = groupRepository.getByName(name);
+        Group group = groupRepository.findByName(name);
         GroupDTO groupDTO = new GroupDTO();
         BeanUtils.copyProperties(group, groupDTO);
         return groupDTO;
     }
 
     public void setParent(Long groupId, Long parentId) {
-
-        groupRepository.setParent(groupId, parentId);
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(NoSuchElementException::new);
+        Group parent = groupRepository.findById(parentId)
+                .orElseThrow(NoSuchElementException::new);
+        group.setParent(parent);
+        groupRepository.save(group);
     }
 }

@@ -48,7 +48,7 @@ public class GroupController {
 
     @PutMapping
     public void setParent(@RequestParam Long groupId,
-                           @RequestParam Long parentId) {
+                          @RequestParam Long parentId) {
         groupService.setParent(groupId, parentId);
     }
 

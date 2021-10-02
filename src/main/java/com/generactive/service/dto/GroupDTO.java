@@ -1,8 +1,8 @@
 package com.generactive.service.dto;
 
-import com.generactive.model.Group;
-import com.generactive.model.Item;
-
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,13 +10,16 @@ public class GroupDTO implements DTO{
 
     private Long id;
 
+    @Size(min = 3)
+    @NotBlank
     private String name;
 
-    private Group parent;
+    @Size(min = 3)
+    private String parent;
 
-    private List<Group> subGroups;
+    private List<GroupDTO> subGroups;
 
-    private List<Item> items;
+    private List<ItemDTO> items;
 
     public Long getId() {
         return id;
@@ -34,27 +37,27 @@ public class GroupDTO implements DTO{
         this.name = name;
     }
 
-    public Group getParent() {
+    public String getParent() {
         return parent;
     }
 
-    public void setParent(Group parent) {
+    public void setParent(String parent) {
         this.parent = parent;
     }
 
-    public List<Group> getSubGroups() {
+    public List<GroupDTO> getSubGroups() {
         return subGroups;
     }
 
-    public void setSubGroups(List<Group> subGroups) {
+    public void setSubGroups(List<GroupDTO> subGroups) {
         this.subGroups = subGroups;
     }
 
-    public List<Item> getItems() {
+    public List<ItemDTO> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(List<ItemDTO> items) {
         this.items = items;
     }
 

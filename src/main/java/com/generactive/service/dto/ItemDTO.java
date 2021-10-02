@@ -1,19 +1,28 @@
 package com.generactive.service.dto;
 
 
+import org.hibernate.validator.constraints.URL;
+
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 
 public class ItemDTO implements DTO{
 
+    @Positive
     private Long id;
 
+    @Size(min = 3)
     private String name;
 
+    @URL
     private String url;
 
+    @Positive
     private Double basePrice;
 
+    @Size(min = 3)
     private String groupName;
 
     public Long getId() {
