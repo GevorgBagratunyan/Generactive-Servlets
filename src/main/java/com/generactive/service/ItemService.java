@@ -4,12 +4,20 @@ import com.generactive.model.Group;
 import com.generactive.model.Item;
 import com.generactive.repository.GroupRepository;
 import com.generactive.repository.ItemRepository;
+import com.generactive.service.criteria.ItemFindAllCriteria;
+import com.generactive.service.criteria.ItemSearchCriteria;
 import com.generactive.service.crud.CRUD;
 import com.generactive.service.dto.ItemDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -61,12 +69,25 @@ public class ItemService implements CRUD<ItemDTO, Long> {
         itemRepository.deleteById(id);
     }
 
-    public List<ItemDTO> getAll() {
-        List<Item> items = itemRepository.findAll();
-        return mapToItemDTOs(items);
-    }
+    public List<ItemDTO> getAll(ItemFindAllCriteria criteria) {
+        Integer limit = criteria.getLimit();
+        Integer offset = criteria.getOffset();
+        String sort = criteria.getSort();
+        String orderByFieldName = criteria.getOrderByFieldName();
 
-    public List<ItemDTO> getAll(Pageable pageable) {
+        Sort srt;
+        if(sort==null) {
+            srt = Sort.by(Sort.Direction.ASC, "id");
+        } else if (sort.equalsIgnoreCase("ASC")) {
+            srt = Sort.by(Sort.Direction.ASC, orderByFieldName);
+        } else if (sort.equalsIgnoreCase("DESC")) {
+            srt = Sort.by(Sort.Direction.DESC, orderByFieldName);
+        } else throw new IllegalArgumentException("Invalid type of sorting, please input ASC or DESC");
+
+        Pageable pageable = new PageableImp(limit, offset, srt);
+        Specification<Item> specification ?????????????????????
+        List<Item> filteredItems = itemRepository.findAll(specification, pageable).getContent();
+
         List<Item> items = itemRepository.findAll(pageable).getContent();
         return mapToItemDTOs(items);
     }
@@ -78,8 +99,8 @@ public class ItemService implements CRUD<ItemDTO, Long> {
         return mapToItemDTOs(items);
     }
 
-    public ItemDTO getByName(String name) {
-
+    public ItemDTO getByName(ItemSearchCriteria criteria) {
+        String name = criteria.getName();
         Item item = itemRepository.findByName(name)
                 .orElseThrow(NoSuchElementException::new);
         ItemDTO itemDTO = new ItemDTO();

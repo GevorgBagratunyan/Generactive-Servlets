@@ -1,10 +1,9 @@
 package com.generactive.controller;
 
 import com.generactive.service.ItemService;
-import com.generactive.service.PageableImp;
+import com.generactive.service.criteria.ItemFindAllCriteria;
+import com.generactive.service.criteria.ItemSearchCriteria;
 import com.generactive.service.dto.ItemDTO;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,43 +18,26 @@ public class ItemController {
         this.itemService = itemService;
     }
 
-    @GetMapping("/by-offset-limit-and-sorted")
-    public List<ItemDTO> getByPagination(@RequestParam Integer limit,
-                                         @RequestParam Integer offset,
-                                         @RequestParam String sort) {
-
-        Sort srt;
-        if(sort.equalsIgnoreCase("ASC")) {
-            srt = Sort.by(Sort.Direction.ASC, "name");
-        } else if(sort.equalsIgnoreCase("DESC")) {
-            srt = Sort.by(Sort.Direction.DESC, "name");
-        } else throw  new IllegalArgumentException("Invalid type of sorting, please input ASC or DESC");
-
-
-        Pageable pageable = new PageableImp(limit, offset, srt);
-        return itemService.getAll(pageable);
+    @GetMapping
+    public List<ItemDTO> getAll(@RequestBody ItemFindAllCriteria criteria) {
+        return itemService.getAll(criteria);
     }
 
 
     @GetMapping("/{id}")
     public ItemDTO get(@PathVariable long id) {
-            return itemService.get(id);
-    }
-
-    @GetMapping
-    public List<ItemDTO> getAll() {
-        return itemService.getAll();
+        return itemService.get(id);
     }
 
     @GetMapping("/by-price")
     public List<ItemDTO> allByPriceRange(@RequestParam double from,
-                                      @RequestParam double to) {
+                                         @RequestParam double to) {
         return itemService.allByPriceRange(from, to);
     }
 
-    @GetMapping("/item/{name}")
-    public ItemDTO getByName(@PathVariable String name) {
-        return itemService.getByName(name);
+    @GetMapping("/search")
+    public ItemDTO getByName(@RequestBody ItemSearchCriteria criteria) {
+        return itemService.getByName(criteria);
     }
 
     @PostMapping
