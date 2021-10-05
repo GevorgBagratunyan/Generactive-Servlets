@@ -85,8 +85,8 @@ public class ItemService implements CRUD<ItemDTO, Long> {
         } else throw new IllegalArgumentException("Invalid type of sorting, please input ASC or DESC");
 
         Pageable pageable = new PageableImp(limit, offset, srt);
-        Specification<Item> specification ?????????????????????
-        List<Item> filteredItems = itemRepository.findAll(specification, pageable).getContent();
+//        Specification<Item> specification ?????????????????????
+//        List<Item> filteredItems = itemRepository.findAll(specification, pageable).getContent();
 
         List<Item> items = itemRepository.findAll(pageable).getContent();
         return mapToItemDTOs(items);
