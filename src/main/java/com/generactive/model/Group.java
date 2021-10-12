@@ -56,6 +56,14 @@ public class Group {
         return parent;
     }
 
+    public List<Group> getSubGroups() {
+        return subGroups;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
     public void addSubGroup(Group group) {
         subGroups.add(group);
     }
