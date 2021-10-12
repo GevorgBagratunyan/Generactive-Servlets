@@ -4,6 +4,7 @@ import com.generactive.model.Group;
 import com.generactive.repository.GroupRepository;
 import com.generactive.service.crud.CRUD;
 import com.generactive.service.dto.GroupDTO;
+import com.generactive.service.util.HierarchyValidator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -72,12 +73,18 @@ public class GroupService implements CRUD<GroupDTO, Long> {
         return groupDTO;
     }
 
-    public void setParent(Long groupId, Long parentId) {
+    public void setParent(Long groupId, Long parentIdToSet) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(NoSuchElementException::new);
-        Group parent = groupRepository.findById(parentId)
+        Group parent = groupRepository.findById(parentIdToSet)
                 .orElseThrow(NoSuchElementException::new);
-        group.setParent(parent);
+
+        if(HierarchyValidator.isValid(group, parentIdToSet)) {
+            group.setParent(parent);
+        } else throw new IllegalArgumentException("You can not set that parent to the group, " +
+                "because it's out of allowed hierarchy");
+
+
         groupRepository.save(group);
     }
 }

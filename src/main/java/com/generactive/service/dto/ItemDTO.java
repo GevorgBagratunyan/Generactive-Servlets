@@ -1,10 +1,15 @@
 package com.generactive.service.dto;
 
 
+import com.generactive.model.User;
 import org.hibernate.validator.constraints.URL;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Objects;
 
 
@@ -24,6 +29,12 @@ public class ItemDTO implements DTO{
 
     @Size(min = 3)
     private String groupName;
+
+    private LocalDate createdDate;
+
+    private LocalDate updatedDate;
+
+    private String createdBy;
 
     public Long getId() {
         return id;
@@ -63,6 +74,30 @@ public class ItemDTO implements DTO{
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+    }
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDate getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(LocalDate updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     @Override

@@ -2,8 +2,10 @@ package com.generactive.service;
 
 import com.generactive.model.Group;
 import com.generactive.model.Item;
+import com.generactive.model.User;
 import com.generactive.repository.GroupRepository;
 import com.generactive.repository.ItemRepository;
+import com.generactive.repository.UserRepository;
 import com.generactive.service.criteria.ItemSearchCriteria;
 import com.generactive.service.criteria.PageableImp;
 import com.generactive.service.crud.CRUD;
@@ -23,10 +25,12 @@ public class ItemService implements CRUD<ItemDTO, Long> {
 
     private final ItemRepository itemRepository;
     private final GroupRepository groupRepository;
+    private final UserRepository userRepository;
 
-    public ItemService(ItemRepository itemRepository, GroupRepository groupRepository) {
+    public ItemService(ItemRepository itemRepository, GroupRepository groupRepository, UserRepository userRepository) {
         this.itemRepository = itemRepository;
         this.groupRepository = groupRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -34,6 +38,8 @@ public class ItemService implements CRUD<ItemDTO, Long> {
 
         Item item = new Item();
         BeanUtils.copyProperties(itemDTO, item);
+        User user = userRepository.findByUsername(itemDTO.getCreatedBy());
+        item.setCreatedBy(user);
         Item saved = itemRepository.save(item);
         BeanUtils.copyProperties(saved, itemDTO);
         return itemDTO;
@@ -83,9 +89,6 @@ public class ItemService implements CRUD<ItemDTO, Long> {
         Pageable pageable = new PageableImp(limit, offset, srt);
 
         GenericSpecification<Item> specification = new GenericSpecification<>(criteria);
-
-//        Specification<Item> specification ?????????????????????
-//        List<Item> filteredItems = itemRepository.findAll(specification, pageable).getContent();
 
         List<Item> items = itemRepository.findAll(pageable).getContent();
         return mapToItemDTOs(items);

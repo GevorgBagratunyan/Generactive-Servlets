@@ -1,9 +1,11 @@
 package com.generactive.controller;
 
+import com.generactive.security.GeneractiveUserDetails;
 import com.generactive.service.ItemService;
 import com.generactive.service.criteria.ItemSearchCriteria;
 import com.generactive.service.dto.ItemDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +43,9 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDTO save(@RequestBody ItemDTO itemDTO) {
+    public ItemDTO save(@RequestBody ItemDTO itemDTO,
+                        @AuthenticationPrincipal GeneractiveUserDetails userDetails) {
+        itemDTO.setCreatedBy(userDetails.getUsername());
         return itemService.create(itemDTO);
     }
 

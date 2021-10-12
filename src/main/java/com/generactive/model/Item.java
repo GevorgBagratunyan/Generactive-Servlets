@@ -1,8 +1,12 @@
 package com.generactive.model;
 
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import javax.persistence.Entity;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity()
@@ -28,7 +32,27 @@ public class Item {
     @JoinColumn(name = "group_id")
     private Group group;
 
+    @Column(name = "created_date")
+    private LocalDate createdDate;
+
+    @Column(name = "updated_date")
+    private LocalDate updatedDate;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "created_by")
+    private User createdBy;
+
     public Item() {
+    }
+
+    @PrePersist
+    public void setCreatedDateAndCreator() {
+        this.createdDate = LocalDate.now();
+    }
+
+    @PreUpdate
+    public void setUpdatedDate() {
+        this.updatedDate = LocalDate.now();
     }
 
     public Long getId() {
@@ -71,6 +95,30 @@ public class Item {
         this.group = group;
     }
 
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDate getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(LocalDate updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public void printContent() {
         System.out.println("    Item groups id: " + this.group.getId());
         System.out.println("    Item name : " + this.name);
@@ -111,4 +159,5 @@ public class Item {
     public int hashCode() {
         return Objects.hash(id, name, url, basePrice, group.getName());
     }
+
 }

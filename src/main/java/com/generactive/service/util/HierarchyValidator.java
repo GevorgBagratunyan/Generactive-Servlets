@@ -11,15 +11,18 @@ public class HierarchyValidator {
 
     private static GroupRepository repository;
 
-    public static boolean validate(Long groupId, Long parentId) {
-         Group group = repository.findById(groupId)
-                 .orElseThrow(NoSuchElementException::new);
+    public HierarchyValidator(GroupRepository repository) {
+        this.repository = repository;
+    }
+
+    public static boolean isValid(Group group, Long parentIdToSet) {
+
          if(group.getSubGroups().isEmpty()) {
              return true;
          }
 
         Integer parentLvlToSet = 0;
-        getLvl(parentId, parentLvlToSet);
+        getLvl(parentIdToSet, parentLvlToSet);
 
         Integer currentParentLvl = 0;
         getLvl(group.getParent().getId(), currentParentLvl);
