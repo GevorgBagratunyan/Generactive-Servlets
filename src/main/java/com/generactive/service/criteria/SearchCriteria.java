@@ -1,5 +1,6 @@
 package com.generactive.service.criteria;
 
+
 import com.generactive.service.specification.SearchOperation;
 
 public class SearchCriteria {

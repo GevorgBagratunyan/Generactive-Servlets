@@ -1,4 +1,4 @@
-package com.generactive.service;
+package com.generactive.service.criteria;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

@@ -1,9 +1,9 @@
 package com.generactive.controller;
 
 import com.generactive.service.ItemService;
-import com.generactive.service.criteria.ItemFindAllCriteria;
 import com.generactive.service.criteria.ItemSearchCriteria;
 import com.generactive.service.dto.ItemDTO;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDTO> getAll(@RequestBody ItemFindAllCriteria criteria) {
+    public List<ItemDTO> getAll(@RequestBody ItemSearchCriteria criteria) {
         return itemService.getAll(criteria);
     }
 
@@ -50,6 +50,7 @@ public class ItemController {
         itemService.update(item);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/set-group")
     public void setGroup(@RequestParam Long itemId,
                          @RequestParam Long groupId) {

@@ -4,20 +4,16 @@ import com.generactive.model.Group;
 import com.generactive.model.Item;
 import com.generactive.repository.GroupRepository;
 import com.generactive.repository.ItemRepository;
-import com.generactive.service.criteria.ItemFindAllCriteria;
 import com.generactive.service.criteria.ItemSearchCriteria;
+import com.generactive.service.criteria.PageableImp;
 import com.generactive.service.crud.CRUD;
 import com.generactive.service.dto.ItemDTO;
+import com.generactive.service.specification.GenericSpecification;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -69,7 +65,7 @@ public class ItemService implements CRUD<ItemDTO, Long> {
         itemRepository.deleteById(id);
     }
 
-    public List<ItemDTO> getAll(ItemFindAllCriteria criteria) {
+    public List<ItemDTO> getAll(ItemSearchCriteria criteria) {
         Integer limit = criteria.getLimit();
         Integer offset = criteria.getOffset();
         String sort = criteria.getSort();
@@ -85,6 +81,9 @@ public class ItemService implements CRUD<ItemDTO, Long> {
         } else throw new IllegalArgumentException("Invalid type of sorting, please input ASC or DESC");
 
         Pageable pageable = new PageableImp(limit, offset, srt);
+
+        GenericSpecification<Item> specification = new GenericSpecification<>(criteria);
+
 //        Specification<Item> specification ?????????????????????
 //        List<Item> filteredItems = itemRepository.findAll(specification, pageable).getContent();
 

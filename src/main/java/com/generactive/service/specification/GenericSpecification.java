@@ -7,6 +7,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GenericSpecification<T> implements Specification<T> {
 
@@ -19,22 +21,30 @@ public class GenericSpecification<T> implements Specification<T> {
 
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+
+        List<Predicate> predicates = new ArrayList<>();
         String argument = searchCriteria.getArgument();
 
-        switch (searchCriteria.getSearchOperation()) {
-            case EQUALITY:
-                return criteriaBuilder.equal(root.get(searchCriteria.getKey()), argument);
-            case GREATER_THAN:
-                return criteriaBuilder.greaterThan(root.get(searchCriteria.getKey()), (Comparable) argument);
-            case IN:
-                return root.get(searchCriteria.getKey()).in(argument);
-            case LIKE:
-                return criteriaBuilder.like(root.get(searchCriteria.getKey()), argument);
-            case LESS_THAN:
-                return criteriaBuilder.lessThan(root.get(searchCriteria.getKey()), (Comparable) argument);
-            case NEGATION:
-                return criteriaBuilder.notEqual(root.get(searchCriteria.getKey()), argument);
+        //Search argument case
+        if(argument!=null) {
+            switch (searchCriteria.getSearchOperation()) {
+                case EQUALITY:
+                    predicates.add(criteriaBuilder.equal(root.get(searchCriteria.getKey()), argument));
+                case GREATER_THAN:
+                    predicates.add(criteriaBuilder.greaterThan(root.get(searchCriteria.getKey()), (Comparable) argument));
+                case IN:
+                    predicates.add(root.get(searchCriteria.getKey()).in(argument));
+                case LIKE:
+                    predicates.add(criteriaBuilder.like(root.get(searchCriteria.getKey()), argument));
+                case LESS_THAN:
+                    predicates.add(criteriaBuilder.lessThan(root.get(searchCriteria.getKey()), (Comparable) argument));
+                case NEGATION:
+                    predicates.add(criteriaBuilder.notEqual(root.get(searchCriteria.getKey()), argument));
+            }
         }
-        return null;
+
+
+
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 }

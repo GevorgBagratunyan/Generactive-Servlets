@@ -1,7 +1,6 @@
 package com.generactive.security;
 
 import com.generactive.model.User;
-import com.generactive.model.enums.Authority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -2,15 +2,18 @@ package com.generactive.service.criteria;
 
 import com.generactive.service.dto.DTO;
 
-import java.util.Objects;
 
-public class ItemSearchCriteria implements DTO {
+public class ItemSearchCriteria extends SearchCriteria implements DTO {
 
     private Long id;
     private String name;
     private String url;
     private Double basePrice;
     private String condition; // >, < or =
+    private Integer limit;
+    private Integer offset;
+    private String sort;
+    private String orderByFieldName;
 
     public Long getId() {
         return id;
@@ -52,31 +55,35 @@ public class ItemSearchCriteria implements DTO {
         this.condition = condition;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ItemSearchCriteria that = (ItemSearchCriteria) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(url, that.url) &&
-                Objects.equals(basePrice, that.basePrice) &&
-                Objects.equals(condition, that.condition);
+    public Integer getLimit() {
+        return limit;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 
-    @Override
-    public String toString() {
-        return "ItemSearchCriteria{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", url='" + url + '\'' +
-                ", basePrice=" + basePrice +
-                ", condition='" + condition + '\'' +
-                '}';
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
+
+    public String getOrderByFieldName() {
+        return orderByFieldName;
+    }
+
+    public void setOrderByFieldName(String orderByFieldName) {
+        this.orderByFieldName = orderByFieldName;
     }
 }
